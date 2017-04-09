@@ -51,3 +51,7 @@ msgstr "Error!"
 msgctxt "#32006"
 msgid "PVR backend стартира на порт %s"
 msgstr "PVR backend started on port %s"
+
+msgctxt "#32007"
+msgid "Настройване на следващо генериране на плейлиста след %s минути"
+msgstr ""

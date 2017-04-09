@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-import urllib
+from urllib import unquote
 from utils import *
-from datetime import datetime
 from bottle import route, default_app, HTTPResponse
 
 __DEBUG__ = False
@@ -18,7 +17,7 @@ def get_playlist():
     Displays the m3u playlist
     :return: m3u
   """
-  log("get_playlist() started: %s " % datetime.now())
+  log("get_playlist() started")
   body = None
   body = M3U_START_MARKER + NEWLINE
   try:
@@ -32,7 +31,7 @@ def get_playlist():
   if not __DEBUG__:
     headers['Content-Type'] = "audio/mpegurl"
     
-  log("get_playlist() ended: %s " % datetime.now())
+  log("get_playlist() ended")
   
   return HTTPResponse(body, 
                       status=200, 
@@ -55,7 +54,7 @@ def get_stream(name):
   body     = None
   location = None
 
-  log("get_stream() started: %s " % datetime.now())
+  log("get_stream() started")
 
   ### If this is the first requst by the player
   ### return a dummy response to prevent duplicate requests 
@@ -65,7 +64,7 @@ def get_stream(name):
       s.write("")
     log("Session created!")
 
-    log("get_stream() ended: %s " % datetime.now())
+    log("get_stream() ended")
     return HTTPResponse(M3U_START_MARKER, 
                       status=200, 
                       **headers)
@@ -75,7 +74,7 @@ def get_stream(name):
   ### If this is the second request by the player
   ### redirect it to the original stream  
   try:
-    name = urllib.unquote(name)
+    name = unquote(name)
     found = False
     
     with open(pl_cache) as file:
@@ -91,7 +90,7 @@ def get_stream(name):
           found = True
     
     if not found:
-      log("Stream not found for channel %s in playlist" % name)
+      log("Stream not found for channel %s" % name)
       return HTTPResponse(body, status=404)
 
     if __DEBUG__:
@@ -105,7 +104,7 @@ def get_stream(name):
     body = str(er)
     log(str(er), 4)
     
-  log("get_stream() ended: %s " % datetime.now())
+  log("get_stream() ended")
   
   return HTTPResponse(body, 
                       status=302, 

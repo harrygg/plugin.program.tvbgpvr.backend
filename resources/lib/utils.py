@@ -164,6 +164,7 @@ M3U_START_MARKER = "#EXTM3U"
 M3U_INFO_MARKER = "#EXTINF"
 LOCALHOST = "localhost"
 NEWLINE = "\n"
+STREAM_URL = "http://localhost:%s/tvbgpvr.backend/stream/%s"
 
 ### Addon starts
 if settings.firstrun:

@@ -8,7 +8,7 @@ import xbmcaddon
 from resources.lib.utils import *
 from resources.lib.playlist import *
 
-__DEBUG__ = False
+__DEBUG__ = True
 
 log("Started on %s " % user_agent)
 
@@ -51,7 +51,7 @@ try:
     if settings.hide_lq:
       pl.disable_quality(Quality.LQ)
     
-    ### Save original playlist to disk 
+    ### Save original playlist to disk, use it for resolving stream urls
     if not pl.save():
       notify_error(language(32001))
       
@@ -61,10 +61,10 @@ try:
       pl.save(path=names_file_path, 
               type=PlaylistType.NAMES)
     
-    ### Create playlist with static channels
+    ### Create the playlist with static channels
     for stream in pl.streams:
       name = urllib.quote(stream.name)
-      stream.url = "http://localhost:%s/tvbgpvr.backend/stream/%s" % (settings.port, name)
+      stream.url = STREAM_URL % (settings.port, name)
     
     ### Write playlist to disk
     if not pl.save(path=pl_path):
@@ -78,7 +78,9 @@ except Exception, er:
   log(er, xbmc.LOGERROR)
 
 ### Schedule next run
-command = ALARMCLOCK % (id, settings.run_on_interval * 60)
+interval = int(settings.run_on_interval) * 60
+log(language(32007) % interval)
+command = ALARMCLOCK % (id, interval)
 xbmc.executebuiltin(command)
 
 if progress_bar:

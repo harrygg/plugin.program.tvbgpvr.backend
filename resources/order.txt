@@ -1,14 +1,14 @@
-HBO HD
-HBO 2 HD
-HBO 3 HD
 BNT1 HD
 bTV HD
 Nova
-bTV Action HD
 BIT HD
+TV+
 Bulgaria on Air
+ТВ Европа
 Diema Sport HD
 Diema Sport 2 HD
+RING BG HD
+Sport+ HD
 Viasat Explorer
 Viasat History
 Viasat Nature
@@ -20,15 +20,16 @@ NatGeo HD
 NatGeo Wild HD
 History Channel
 History 2 HD
-RING BG HD
-Sport+ HD
-F+
-TV+
-KinoNova
+HBO HD
+HBO 2 HD
+HBO 3 HD
+bTV Action HD
 bTV Cinema
-ТВ Европа
+KinoNova
+F+
 Cinemax HD
 Cinemax 2 HD
+24 Kitchen HD
 FilmBox Plus HD
 Action+ HD
 FilmBox Extra HD
@@ -41,4 +42,3 @@ AXN Black
 СКАТ
 Alfa TV
 Канал 3
-24 Kitchen HD
