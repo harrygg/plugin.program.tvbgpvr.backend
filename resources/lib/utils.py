@@ -45,7 +45,7 @@ def notify_error(msg):
   command = "Notification(%s,%s,%s)" % (language(32005), msg, 10000)
   xbmc.executebuiltin(command)  
 
-def update(action, location, crash=None):
+def __update__(action, location, crash=None):
   try:
     from ga import ga
     p = {}
@@ -141,34 +141,38 @@ def get_disabled_groups():
     
   return disabled_groups
 
+  
 ## Initialize the addon
-id          = "plugin.program.tvbgpvr.backend"
-this        = xbmcaddon.Addon(id=id)
-language    = this.getLocalizedString
-settings    = Settings()
-pl_name     = "bgpl.m3u"
-profile_dir = xbmc.translatePath( this.getAddonInfo('profile') ).decode('utf-8')
-db_dir      = os.path.join(profile_dir, "../../Database/")
-pl_path     = os.path.join(profile_dir, pl_name)
-pl_cache    = os.path.join(profile_dir, ".cache")
-session     = os.path.join(profile_dir, '.session')
-__version__ = xbmc.getInfoLabel("System.BuildVersion")
-VERSION     = int(__version__[0:2])
-user_agent  = "Kodi %s" % __version__
+id            = "plugin.program.tvbgpvr.backend"
+this          = xbmcaddon.Addon(id=id)
+language      = this.getLocalizedString
+settings      = Settings()
+pl_name       = "bgpl.m3u"
+profile_dir   = xbmc.translatePath( this.getAddonInfo('profile') ).decode('utf-8')
+db_dir        = os.path.join(profile_dir, "../../Database/")
+pl_path       = os.path.join(profile_dir, pl_name)
+pl_cache      = os.path.join(profile_dir, ".cache")
+session       = os.path.join(profile_dir, '.session')
+__version__   = xbmc.getInfoLabel("System.BuildVersion")
+VERSION       = int(__version__[0:2])
+user_agent    = "Kodi %s" % __version__
+scheduled_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
 
 ### Literals
-ALARMCLOCK  = "AlarmClock(ScheduledReload, RunScript(%s, False), %s, silent)"
-GET = 'GET'
-HEAD = 'HEAD'
-M3U_START_MARKER = "#EXTM3U"
-M3U_INFO_MARKER = "#EXTINF"
-LOCALHOST = "localhost"
-NEWLINE = "\n"
-STREAM_URL = "http://localhost:%s/tvbgpvr.backend/stream/%s"
+RUNSCRIPT     = "RunScript(%s, True)" % id
+GET           = 'GET'
+HEAD          = 'HEAD'
+LOCALHOST     = "localhost"
+NEWLINE       = "\n"
+STREAM_URL    = "http://localhost:%s/tvbgpvr.backend/stream/%s"
 
 ### Addon starts
 if settings.firstrun:
   this.openSettings()
   settings.firstrun = False
   
-update('operation', 'regeneration')
+__update__('operation', 'regeneration')
+
+log("Started on %s " % user_agent)
+if scheduled_run:
+  log(language(32004))

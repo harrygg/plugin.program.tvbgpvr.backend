@@ -9,17 +9,10 @@ from resources.lib.utils import *
 from resources.lib.playlist import *
 
 __DEBUG__ = False
-
-log("Started on %s " % user_agent)
-
-auto_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
-if auto_run:
-  log(language(32004))
-
 progress_bar = None
 
 ### If addon is started manually or is in debug mode, display the progress bar 
-if not auto_run or settings.debug:
+if not scheduled_run or settings.debug:
   progress_bar = xbmcgui.DialogProgressBG()
   progress_bar.create(heading=this.getAddonInfo('name'))
 
@@ -80,7 +73,7 @@ except Exception, er:
 ### Schedule next run
 interval = int(settings.run_on_interval) * 60
 log(language(32007) % interval)
-command = ALARMCLOCK % (id, interval)
+command = "AlarmClock('ScheduledReload', %s, %s, silent)" % (RUNSCRIPT, interval)
 xbmc.executebuiltin(command)
 
 if progress_bar:

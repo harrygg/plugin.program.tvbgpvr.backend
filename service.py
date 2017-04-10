@@ -1,9 +1,9 @@
 import xbmc
 from resources.lib.server import create_server
 from resources.lib.wsgi_app import *
-from resources.lib.utils import notify, clear_session
+from resources.lib.utils import notify, clear_session, RUNSCRIPT
 
-xbmc.executebuiltin("RunScript(plugin.program.tvbgpvr.backend, True)")
+xbmc.executebuiltin(RUNSCRIPT)
 monitor = xbmc.Monitor()
 
 httpd = create_server(app, LOCALHOST, port=port)

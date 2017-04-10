@@ -19,7 +19,7 @@ def get_playlist():
   """
   log("get_playlist() started")
   body = None
-  body = M3U_START_MARKER + NEWLINE
+  body = "#EXTM3U\n"
   try:
     with open(pl_path) as file:
       body = file.read() 
@@ -65,7 +65,7 @@ def get_stream(name):
     log("Session created!")
 
     log("get_stream() ended")
-    return HTTPResponse(M3U_START_MARKER, 
+    return HTTPResponse(None,
                       status=200, 
                       **headers)
   
@@ -86,7 +86,7 @@ def get_stream(name):
             location = location.replace(matches[0], "")
           log("%s stream found: %s" % (name, location))
           break
-        if line.startswith(M3U_INFO_MARKER) and name in line:
+        if line.startswith("#EXTINF") and name in line:
           found = True
     
     if not found:
