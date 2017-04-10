@@ -11,6 +11,10 @@ from resources.lib.playlist import *
 __DEBUG__ = False
 progress_bar = None
 
+log("on %s " % user_agent)
+if scheduled_run:
+  log(translate(32004))
+  
 ### If addon is started manually or is in debug mode, display the progress bar 
 if not scheduled_run or settings.debug:
   progress_bar = xbmcgui.DialogProgressBG()

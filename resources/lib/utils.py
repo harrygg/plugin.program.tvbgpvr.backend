@@ -149,7 +149,7 @@ id            = "plugin.program.tvbgpvr.backend"
 this          = xbmcaddon.Addon(id=id)
 translate     = this.getLocalizedString
 settings      = Settings()
-pl_name       = "bgpl.m3u"
+pl_name       = "playlist.m3u"
 profile_dir   = xbmc.translatePath( this.getAddonInfo('profile') ).decode('utf-8')
 db_dir        = os.path.join(profile_dir, "../../Database/")
 pl_path       = os.path.join(profile_dir, pl_name)
@@ -174,7 +174,3 @@ if settings.firstrun:
   settings.firstrun = False
   
 __update__('operation', 'regeneration')
-
-log("Started on %s " % user_agent)
-if scheduled_run:
-  log(translate(32004))
