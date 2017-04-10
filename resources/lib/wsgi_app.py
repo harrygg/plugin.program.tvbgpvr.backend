@@ -5,7 +5,7 @@ from utils import *
 from urllib import unquote
 from bottle import route, default_app, HTTPResponse
 
-__DEBUG__ = True
+__DEBUG__ = False
 app       = default_app()
 port      = settings.port
 
