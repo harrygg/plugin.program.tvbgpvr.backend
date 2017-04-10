@@ -55,3 +55,7 @@ msgstr ""
 msgctxt "#32007"
 msgid "Scheduling next run after %s minutes"
 msgstr ""
+
+msgctxt "#32008"
+msgid "Stream not found for channel %s"
+msgstr ""

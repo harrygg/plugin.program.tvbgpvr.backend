@@ -38,11 +38,13 @@ def show_progress(progress_bar, percent, msg):
     log(msg)
 
 def notify(msg):
-  command = "Notification(%s,%s,%s)" % (language(32003), msg, 10000)
+  log("notify() %s" % msg)
+  command = "Notification(%s,%s,%s)" % (translate(32003), msg, 5000)
   xbmc.executebuiltin(command) 
   
 def notify_error(msg):
-  command = "Notification(%s,%s,%s)" % (language(32005), msg, 10000)
+  log("notify_error() %s" % msg)
+  command = "Notification(%s,%s,%s)" % (translate(32005), msg, 5000)
   xbmc.executebuiltin(command)  
 
 def __update__(action, location, crash=None):
@@ -145,7 +147,7 @@ def get_disabled_groups():
 ## Initialize the addon
 id            = "plugin.program.tvbgpvr.backend"
 this          = xbmcaddon.Addon(id=id)
-language      = this.getLocalizedString
+translate     = this.getLocalizedString
 settings      = Settings()
 pl_name       = "bgpl.m3u"
 profile_dir   = xbmc.translatePath( this.getAddonInfo('profile') ).decode('utf-8')
@@ -175,4 +177,4 @@ __update__('operation', 'regeneration')
 
 log("Started on %s " % user_agent)
 if scheduled_run:
-  log(language(32004))
+  log(translate(32004))

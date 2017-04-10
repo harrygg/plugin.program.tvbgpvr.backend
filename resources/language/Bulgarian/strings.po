@@ -55,3 +55,7 @@ msgstr "PVR backend started on port %s"
 msgctxt "#32007"
 msgid "Настройване на следващо генериране на плейлиста след %s минути"
 msgstr ""
+
+msgctxt "#32008"
+msgid "Не е намерен поток за канал %s"
+msgstr ""

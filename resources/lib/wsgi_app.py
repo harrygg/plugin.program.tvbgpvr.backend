@@ -8,7 +8,6 @@ from bottle import route, default_app, HTTPResponse
 __DEBUG__ = False
 app       = default_app()
 port      = settings.port
-language  = this.getLocalizedString
 
 
 @route('/tvbgpvr.backend/playlist', method=GET)
@@ -40,8 +39,7 @@ def get_playlist():
 
 @route('/tvbgpvr.backend/stream/<name>', method=HEAD)
 def get_stream(name):
-  return HTTPResponse("", 
-                      status=200)
+  return HTTPResponse(None, status=200)
 
 
 @route('/tvbgpvr.backend/stream/<name>', method=GET)
@@ -55,23 +53,20 @@ def get_stream(name):
   location = None
 
   log("get_stream() started")
-
-  ### If this is the first requst by the player
-  ### return a dummy response to prevent duplicate requests 
-  ### causing failures on some middleware servers 
+  ### Kodi 17 sends 2 GET requests for a resource which may cause 
+  ### stream invalidation on some middleware servers. If this is 
+  ### the first request return a dummy response and handle the 2nd
   if VERSION > 16 and not os.path.isfile(session):
     with open(session, "w") as s: 
       s.write("")
-    log("Session created!")
-
-    log("get_stream() ended")
+    log("get_stream() ended. Session created!")
     return HTTPResponse(None,
                       status=200, 
                       **headers)
   
   clear_session()
 
-  ### If this is the second request by the player
+  ### If this is the 2nd request by the player
   ### redirect it to the original stream  
   try:
     name = unquote(name)
@@ -90,13 +85,11 @@ def get_stream(name):
           found = True
     
     if not found:
-      log("Stream not found for channel %s" % name)
+      notify_error(translate(32008) % name)
       return HTTPResponse(body, status=404)
 
     if __DEBUG__:
-      body = location
-      return HTTPResponse(body, 
-                      status=200)
+      return HTTPResponse(location, status=200)
                       
     headers['Location'] = location
 

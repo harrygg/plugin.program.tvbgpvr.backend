@@ -13,9 +13,9 @@ starting = True
 while not monitor.abortRequested():
   httpd.handle_request()
   if starting:
-    notify(language(32006) % port)
+    notify(translate(32006) % port)
     starting = False
 
 httpd.socket.close()
 clear_session()
-log(language(32003))
+log(translate(32003))

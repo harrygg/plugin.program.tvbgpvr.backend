@@ -31,7 +31,7 @@ try:
                 temp_folder=profile_dir)
   
   if pl.count() == 0:
-    notify_error(language(32000))
+    notify_error(translate(32000))
   else:
     # Reorder playlist as per the order in the template file
     pl.reorder(template_file = get_template_file())
@@ -46,7 +46,7 @@ try:
     
     ### Save original playlist to disk, use it for resolving stream urls
     if not pl.save():
-      notify_error(language(32001))
+      notify_error(translate(32001))
       
     ### Export channel names from original playlist
     if settings.export_names:
@@ -61,7 +61,7 @@ try:
     
     ### Write playlist to disk
     if not pl.save(path=pl_path):
-      notify_error(language(32001))
+      notify_error(translate(32001))
 
     ### Copy playlist to additional folder if specified
     if settings.copy_playlist and os.path.isdir(settings.copy_to_folder):
@@ -72,7 +72,7 @@ except Exception, er:
 
 ### Schedule next run
 interval = int(settings.run_on_interval) * 60
-log(language(32007) % interval)
+log(translate(32007) % interval)
 command = "AlarmClock('ScheduledReload', %s, %s, silent)" % (RUNSCRIPT, interval)
 xbmc.executebuiltin(command)
 

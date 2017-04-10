@@ -5,7 +5,6 @@ import sys
 import xbmc
 import requests 
 from mapping import *
-from datetime import datetime
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
@@ -55,14 +54,14 @@ class Playlist:
     Loads m3u from given location - local storage or online resource
     '''
     ret = True
-    xbmc.log("__load__() started: %s " % datetime.now())
+    xbmc.log("__load__() started")
     self.progress(1, "Loading playlist from: %s" % self.location)
     if self.location.startswith("http") or self.location.startswith("ftp"):
       ret = self.download()
     
     if ret:
       self.parse()
-    xbmc.log("__load__() ended: %s " % datetime.now())
+    xbmc.log("__load__() ended")
 
   def download(self):
     try:
@@ -123,19 +122,19 @@ class Playlist:
     Saves the m3u locally and counts the lines 
     Needed for the progress bar
     '''
-    self.log("cache() started: %s " % datetime.now())
+    self.log("cache() started")
     self.location = self.cache_file
     with open(self.location, "w") as file:
       for line in file_content:
         self.size += 1
         file.write("%s\n" % line.rstrip().encode("utf-8"))
-    self.log("cache() ended: %s " % datetime.now())
+    self.log("cache() ended")
  
   def parse(self):
     '''
       Parse any given m3u file line by line
     '''
-    xbmc.log("parse() started: %s " % datetime.now())
+    xbmc.log("parse() started")
     percent = 0  
     stream = None
     self.progress(0, "Parsing playlist")
@@ -218,7 +217,7 @@ class Playlist:
           Template files contains channel names - single name on each a row
     '''
     
-    self.log("reorder() started: %s " % datetime.now())
+    self.log("reorder() started")
     self.template_file = kwargs.get('template_file', self.template_file)
     template_order = self.load_order_template()
     
@@ -229,7 +228,7 @@ class Playlist:
         pass
     
     self.streams = sorted(self.streams, key=lambda stream: stream.order)
-    self.log("reorder() ended: %s " % datetime.now())
+    self.log("reorder() ended")
 
   def load_order_template(self):
     template_order = {}
