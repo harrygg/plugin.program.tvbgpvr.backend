@@ -8,7 +8,7 @@ import xbmcaddon
 from resources.lib.utils import *
 from resources.lib.playlist import *
 
-__DEBUG__ = False
+__DEBUG__ = True
 progress_bar = None
 
 ### If addon is started manually or is in debug mode, display the progress bar 

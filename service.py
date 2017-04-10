@@ -1,10 +1,10 @@
-import xbmc
+from xbmc import executebuiltin, Monitor
 from resources.lib.server import create_server
 from resources.lib.wsgi_app import *
 from resources.lib.utils import notify, clear_session, RUNSCRIPT
 
-xbmc.executebuiltin(RUNSCRIPT)
-monitor = xbmc.Monitor()
+executebuiltin(RUNSCRIPT)
+monitor = Monitor()
 
 httpd = create_server(app, LOCALHOST, port=port)
 httpd.timeout = 0.1

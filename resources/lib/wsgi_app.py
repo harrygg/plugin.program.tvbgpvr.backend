@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-from urllib import unquote
 from utils import *
+from urllib import unquote
 from bottle import route, default_app, HTTPResponse
 
-__DEBUG__ = False
+__DEBUG__ = True
 app       = default_app()
 port      = settings.port
-
 
 @route('/tvbgpvr.backend/playlist', method=GET)
 def get_playlist():
@@ -17,7 +16,6 @@ def get_playlist():
     :return: m3u
   """
   log("get_playlist() started")
-  body = None
   body = "#EXTM3U\n"
   try:
     with open(pl_path) as file:
@@ -39,7 +37,8 @@ def get_playlist():
 
 @route('/tvbgpvr.backend/stream/<name>', method=HEAD)
 def get_stream(name):
-  return HTTPResponse(None, status=200)
+  return HTTPResponse(None, 
+                      status=200)
 
 
 @route('/tvbgpvr.backend/stream/<name>', method=GET)
@@ -57,11 +56,10 @@ def get_stream(name):
   ### stream invalidation on some middleware servers. If this is 
   ### the first request return a dummy response and handle the 2nd
   if VERSION > 16 and not os.path.isfile(session):
-    with open(session, "w") as s: 
-      s.write("")
+    open(session, "w").close()
     log("get_stream() ended. Session created!")
-    return HTTPResponse(None,
-                      status=200, 
+    return HTTPResponse(body, 
+                      status = 200, 
                       **headers)
   
   clear_session()
@@ -86,10 +84,12 @@ def get_stream(name):
     
     if not found:
       notify_error(translate(32008) % name)
-      return HTTPResponse(body, status=404)
+      return HTTPResponse(body, 
+                          status = 404)
 
     if __DEBUG__:
-      return HTTPResponse(location, status=200)
+      return HTTPResponse(location,
+                          status = 200)
                       
     headers['Location'] = location
 
@@ -98,7 +98,6 @@ def get_stream(name):
     log(str(er), 4)
     
   log("get_stream() ended")
-  
   return HTTPResponse(body, 
-                      status=302, 
+                      status = 302, 
                       **headers)
