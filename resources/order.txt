@@ -1,3 +1,7 @@
+HBO HD
+HBO 2 HD
+HBO 3 HD
+Moviestar HD
 BNT1 HD
 bTV HD
 Nova
@@ -20,9 +24,6 @@ NatGeo HD
 NatGeo Wild HD
 History Channel
 History 2 HD
-HBO HD
-HBO 2 HD
-HBO 3 HD
 bTV Action HD
 bTV Cinema
 KinoNova

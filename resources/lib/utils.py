@@ -2,7 +2,6 @@
 import os
 import sys
 import xbmc
-import sqlite3
 import xbmcaddon
 
 reload(sys)  
@@ -151,7 +150,6 @@ translate     = this.getLocalizedString
 settings      = Settings()
 pl_name       = "playlist.m3u"
 profile_dir   = xbmc.translatePath( this.getAddonInfo('profile') ).decode('utf-8')
-db_dir        = os.path.join(profile_dir, "../../Database/")
 pl_path       = os.path.join(profile_dir, pl_name)
 pl_cache      = os.path.join(profile_dir, ".cache")
 session       = os.path.join(profile_dir, '.session')
@@ -164,13 +162,13 @@ scheduled_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
 RUNSCRIPT     = "RunScript(%s, True)" % id
 GET           = 'GET'
 HEAD          = 'HEAD'
-LOCALHOST     = "localhost"
+LOCALHOST     = "127.0.0.1"
 NEWLINE       = "\n"
-STREAM_URL    = "http://localhost:%s/tvbgpvr.backend/stream/%s"
+STREAM_URL    = "http://127.0.0.1:%s/tvbgpvr.backend/stream/%s"
 
 ### Addon starts
 if settings.firstrun:
   this.openSettings()
   settings.firstrun = False
   
-__update__('operation', 'regeneration')
+__update__('operation', 'start')

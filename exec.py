@@ -24,7 +24,7 @@ try:
   # Get playlist location from settings
   location = settings.url + settings.mac
   if __DEBUG__:
-    location = "http://localhost/tv/playlist.dynamicnames.m3u"
+    location = "http://127.0.0.1/tv/playlist.dynamicnames.m3u"
   
   # Initialize the playlsit object
   pl = Playlist(location=location,

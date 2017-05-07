@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import requests
 from utils import *
 from urllib import unquote
 from bottle import route, default_app, HTTPResponse
@@ -66,7 +67,7 @@ def get_stream(name):
 
   ### If this is the 2nd request by the player
   ### redirect it to the original stream  
-  try:
+  try:  
     name = unquote(name)
     found = False
     
