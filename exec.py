@@ -8,7 +8,7 @@ import xbmcaddon
 from resources.lib.utils import *
 from resources.lib.playlist import *
 
-__DEBUG__ = False
+__DEBUG__ = True
 progress_bar = None
 
 log("on %s " % user_agent)
@@ -24,7 +24,7 @@ try:
   # Get playlist location from settings
   location = settings.url + settings.mac
   if __DEBUG__:
-    location = "http://localhost/tv/playlist.dynamicnames.m3u"
+    location = "http://127.0.0.1/tv/playlist.dynamicnames.m3u"
   
   # Initialize the playlsit object
   pl = Playlist(location=location,
