@@ -167,7 +167,13 @@ class Playlist:
       stream_name = re.compile(',(?:\d+\.)*\s*(.*)').findall(line)[0]
       stream.name = stream_name
       stream_in_map = streams_map.get(stream_name, None)                  
-                  
+      
+      if stream_in_map == None: 
+        #If no stream is found, strip any HD or LQ identifiers and try again
+        stream_name = stream_name.replace("HD", "").replace("LQ", "")
+        self.log("Stripped stream name %s" % stream_name)
+        stream_in_map = streams_map.get(stream_name, None)   
+        
       if stream_in_map != None:
         stream.id = stream_in_map.get("id")
         if self.groups_from_progider:

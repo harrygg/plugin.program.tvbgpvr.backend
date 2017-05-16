@@ -8,7 +8,7 @@ import xbmcaddon
 from resources.lib.utils import *
 from resources.lib.playlist import *
 
-__DEBUG__ = True
+__DEBUG__ = False
 progress_bar = None
 
 log("on %s " % user_agent)
