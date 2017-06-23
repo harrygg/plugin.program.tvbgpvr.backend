@@ -192,7 +192,6 @@
   "Cinemax 2":{"id":"Cinemax 2", "group":"Филми","logo":"http://doubledmusic.eu/tivibg/tvlogos/cinemax_2.png"},
   "Cinemax 2 HD":{"id":"Cinemax 2", "group":"Филми","logo":"http://doubledmusic.eu/tivibg/tvlogos/cinemax_2_hd.png"},
   "Cinema MAX":{"id":"Cinema MAX", "group":"Филми","logo":""},
-  
   "Sport 1 HD":{"id":"Sport 1", "group":"Спортни","logo":"https://media.mtel.bg/newsite2015/images/mtel-sport/mtel-sport-1-logo-290x80px.png"},
   "Sport 1":{"id":"Sport 1", "group":"Спортни","logo":"https://media.mtel.bg/newsite2015/images/mtel-sport/mtel-sport-1-logo-290x80px.png"},
   "Sport 2 HD":{"id":"Sport 2", "group":"Спортни","logo":"https://media.mtel.bg/newsite2015/images/mtel-sport/mtel-sport-1-logo-290x80px.png"},
@@ -315,8 +314,6 @@
   "Tivibu Spor HD":{"id":"Tivibu Spor HD", "group":"Спортни","logo":"http://www.tivibuspor.com.tr/assets/i/header-logo.png"},
   "eir Sport 1":{"id":"eir Sport 1", "group":"Спортни","logo":"https://www.eirmobile.ie/opencms/export/sites/default/.galleries/eirmobile/eir-branding/logo/eir-logo.png"},
   "eir Sport 2":{"id":"eir Sport 1", "group":"Спортни","logo":"https://www.eirsport.ie/Themes/eir/imgs/eir-logo.png"},
-
-  
   "Sky 1":{"id":"Sky 1", "group":"Английски","logo":"https://upload.wikimedia.org/wikipedia/en/thumb/9/91/Sky1_logo_2011.svg/640px-Sky1_logo_2011.svg.png"},
   "Sky 1 +1":{"id":"Sky 1 +1", "group":"Английски","logo":"https://upload.wikimedia.org/wikipedia/en/thumb/9/91/Sky1_logo_2011.svg/640px-Sky1_logo_2011.svg.png"},
   "Sky 2":{"id":"Sky 2", "group":"Английски","logo":"https://upload.wikimedia.org/wikipedia/en/thumb/4/47/Sky2_logo_2011.svg/640px-Sky2_logo_2011.svg.png"},
@@ -393,7 +390,6 @@
   "Power TV HD":{"id":"Power TV", "group":"Музикални","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/PowerTV.png"},
   "Power TV":{"id":"Power TV", "group":"Музикални","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/PowerTV.png"},
   "Top Pop TV":{"id":"Top Pop TV", "group":"Музикални","logo":""},
-  
   "Еврошанс":{"id":"Еврошанс", "group":"Спортни","logo":"http://img2.sportal.bg/uploads/news/2008_42/images/00136728.jpg?20160203155916"},
   "Fishing & Hunting":{"id":"Fishing &amp; Hunting", "group":"Документални","logo":"http://logos.kodibg.org/thefishinghuntingchannel.png"},
   "Fishing & Hunting HD":{"id":"Fishing &amp; Hunting", "group":"Документални","logo":"http://logos.kodibg.org/thefishinghuntingchannel.png"},
@@ -528,7 +524,6 @@
   "RTVE":{"id":"RTVE", "group":"Тематични","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Logo_RTVE.svg/130px-Logo_RTVE.svg.png"},
   "TVE":{"id":"TVE", "group":"Тематични","logo":"https://upload.wikimedia.org/wikipedia/commons/7/7b/TVE_logos.png"},
   "Cosmo HD (es,en)":{"id":"Cosmo HD (es,en)", "group":"Тематични","logo":""},
-  
   "RAI News":{"id":"RAI News", "group":"Италиански","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/RAI_News_2010_neu_Logo.svg/320px-RAI_News_2010_neu_Logo.svg.png"},
   "RAI 1":{"id":"RAI 1", "group":"Италиански","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Rai_1_logo.svg/318px-Rai_1_logo.svg.png"},
   "Rai Uno":{"id":"RAI 1", "group":"Италиански","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Rai_1_logo.svg/318px-Rai_1_logo.svg.png"},
@@ -559,8 +554,6 @@
   "RSI La1":{"id":"RSI La1", "group":"Италиански","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/RSI_La_2_2012.svg/1200px-RSI_La_2_2012.svg.png"},  
   "LA 5":{"id":"LA 5", "group":"Италиански","logo":"http://www.e-story.eu/wp-content/uploads/2016/10/La5_Italy.svg_.png"},  
   "DMAX IT":{"id":"DMAX IT", "group":"Италиански","logo":"https://duckduckgo.com/i/65df17d9.png"},  
-  
-  
   "Tagesschau 24":{"id":"Tagesschau 24", "group":"Немски","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Tagesschau24-2012.svg/301px-Tagesschau24-2012.svg.png"},
   "Tagesschau 24 HD":{"id":"Tagesschau 24", "group":"Немски","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Tagesschau24HD.svg/799px-Tagesschau24HD.svg.png"},
   "ORF1":{"id":"ORF1", "group":"Немски","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/ORF1_logo.svg/320px-ORF1_logo.svg.png"},
@@ -619,7 +612,6 @@
   "DMAX DE":{"id":"DMAX DE", "group":"Немски","logo":"https://duckduckgo.com/i/65df17d9.png"},  
   "TLC DE":{"id":"TLC DE", "group":"Немски","logo":"http://logos.kodibg.org/tlc.png"},  
   "Spiegel Geschichte":{"id":"Spiegel Geschichte", "group":"Немски","logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Spiegel_Geschichte_Logo.svg/2000px-Spiegel_Geschichte_Logo.svg.png"},  
-
   "Первый Инт. канал (тест)":{"id":"Первый канал HD (RU)", "group":"Руски","logo":"http://avatars.mds.yandex.net/get-tv-shows/70764/2a000001518595815f61238b1893ded04218/orig"},
   "Первый канал (EUR)":{"id":"Первый канал HD (RU)", "group":"Руски","logo":"http://avatars.mds.yandex.net/get-tv-shows/70764/2a000001518595815f61238b1893ded04218/orig"},
   "Первый канал HD (RU)":{"id":"Первый канал HD (RU)", "group":"Руски","logo":"http://avatars.mds.yandex.net/get-tv-channel-logos/28884/2a000001519dc87ac3990967fa54f2f9c24f/z"},
@@ -685,7 +677,6 @@
   "5 канал (Укр)":{"id":"5 канал (Укр)", "group":"Руски","logo":"http://img.teleguide.info/channel/300058.gif"},
   "Тонис HD (Укр)":{"id":"Тонис HD (Укр)", "group":"Руски","logo":"http://img.teleguide.info/channel/320.gif"},
   "HD Fashion (Укр)":{"id":"HD Fashion (Укр)", "group":"Руски","logo":""},
-  
   "ARTE Francais HD":{"id":"ARTE Francais", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/Arte.png"},
   "ARTE Francais":{"id":"ARTE Francais", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/Arte.png"},
   "TF1 HD":{"id":"TF1 HD", "group":"Френски","logo":"https://upload.wikimedia.org/wikipedia/commons/5/5c/TF1_logo_1990.png"},
@@ -718,7 +709,6 @@
   "BFM Business HD":{"id":"BFM Business HD", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/BFM_TV.png"},
   "Canal Algerie ":{"id":"Canal Algerie", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/Canal_Alg%C3%A9rie.png"},
   "Moviemax Premier 1 HD":{"id":"Moviemax Premier 1 HD", "group":"Турски","logo":""},
-  
   "Kanal 7 (tr)":{"id":"Kanal 7 (tr)", "group":"Турски","logo":""},
   "Salon 1 HD":{"id":"Salon 1 HD", "group":"Турски","logo":"http://contentlibrary.digiturk.com.tr/Channel/36/Image/salon01_big.jpg"},
   "Salon 2 HD":{"id":"Salon 2 HD", "group":"Турски","logo":""},
@@ -798,7 +788,6 @@
   "Power Turk":{"id":"Power Turk", "group":"Турски","logo":"https://lh3.googleusercontent.com/6T_fY7Nij0whiILQDtJZpxO62eLz3AqbIHotzXYp9tVOexq4i0g0jiJnof0eCyRHG4Y=w170"},
   "Power Turk HD":{"id":"Power Turk", "group":"Турски","logo":"https://lh3.googleusercontent.com/6T_fY7Nij0whiILQDtJZpxO62eLz3AqbIHotzXYp9tVOexq4i0g0jiJnof0eCyRHG4Y=w170"},
   "Akilli TV":{"id":"Akilli TV", "group":"Турски","logo":"http://frocus.net/images/logotv/original/akilli-tv.jpg"},
-
   "HBO NL":{"id":"HBO NL", "group":"Холандски","logo":"http://logos.kodibg.org/tvbg/hbo.png"},
   "HBO2 NL":{"id":"HBO2 NL", "group":"Холандски","logo":"http://logos.kodibg.org/tvbg/hbo2.png"},
   "HBO3 NL":{"id":"HBO3 NL", "group":"Холандски","logo":"http://logos.kodibg.org/tvbg/hbo3.png"},
@@ -848,7 +837,6 @@
   "XXX 6":{"id":"XXX 6", "group":"Възрастни","logo":"http://vignette4.wikia.nocookie.net/tvpedia/images/6/67/Eroxxx_HD.png/revision/latest/zoom-crop/width/480/height/480?cb=20121202040053&path-prefix=ru"},
   "XXX 7":{"id":"XXX 7", "group":"Възрастни","logo":"http://vignette4.wikia.nocookie.net/tvpedia/images/6/67/Eroxxx_HD.png/revision/latest/zoom-crop/width/480/height/480?cb=20121202040053&path-prefix=ru"},
   "Stars XXX":{"id":"Stars XXX", "group":"Възрастни","logo":"http://www.starsxxx.com/logo-starsxxxtv.png"},
-  
   "Slovenija 2 TV":{"id":"Slovenija 2 TV", "group":"Тематични","logo":"http://tvprofil.net/img/kanali-logo/rtv-slo2-logo.png"},
   "Pink Plus":{"id":"Pink Plus", "group":"Сръбски","logo":"http://tvprofil.net/img/kanali-logo/PinkPlus.png"},
   "Pink 2":{"id":"Pink 2", "group":"Сръбски","logo":"http://nextgen-iptv.com/logo/Pink2_SRB.png"},
@@ -898,7 +886,6 @@
   "Канал 5 MK":{"id":"Канал 5 MK", "group":"Сръбски","logo":"http://kanal5.com.mk/images/logo_kanal5_new_small.png"},
   "24 Вести MK":{"id":"24 Вести MK", "group":"Сръбски","logo":"http://24vesti.mk/sites/default/files/vesti24_logo.png"},
   "Nova TV MK":{"id":"Nova TV MK", "group":"Сръбски","logo":"http://novatv.mk/wp-content/uploads/2015/10/cropped-nova-log.png"},
-  
   "ARY News":{"id":"ARY News", "group":"Азиатски","logo":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY_JY1IqFL8B8ZTVkinHZbgv4WiPiNGTxnvuvi9m5EOG2JeQk3"},
   "and TV":{"id":"and TV", "group":"Азиатски","logo":"http://akamai.vidz.zeecdn.com/ozee/asset/and-tv_300x300.png"},
   "and TV":{"id":"and TV", "group":"Азиатски","logo":"http://akamai.dittotv.vidz.zeecdn.com/secure/draco/Shows/Ditto_tv_optimised_logos/115_optimized/AndTV_HD_115x95.png"},
@@ -911,8 +898,6 @@
   "Sikh Channel":{"id":"Sikh Channel", "group":"Азиатски","logo":"http://www.sikhchannel.tv/wp-content/uploads/2015/03/app-logo-300x300.png"},
   "Sangat":{"id":"Sangat", "group":"Азиатски","logo":"http://sangattelevision.org/wp-content/uploads/2012/08/san_logo.png"},
   "Georgia 1 TV":{"id":"Georgia 1 TV", "group":"Руски","logo":""},
-  
-  
   "BNT1 +1":{"id":"BNT1 +1", "group":"Български","logo":"http://logos.kodibg.org/bnt1.png"},
   "BTV +1":{"id":"BTV +1", "group":"Български","logo":"http://logos.kodibg.org/btv.png"},
   "BTV Comedy +1":{"id":"BTV Comedy +1", "group":"Филми","logo":"http://logos.kodibg.org/btvcomedy.png"},
@@ -931,5 +916,5 @@
   "Nova +24":{"id":"Nova +24", "group":"Български","logo":"http://logos.kodibg.org/novatv.png"},
   "BNT1 +48":{"id":"BNT1 +48", "group":"Български","logo":"http://logos.kodibg.org/bnt1.png"},
   "BTV +48":{"id":"BTV +48", "group":"Български","logo":"http://logos.kodibg.org/btv.png"},
-  "Nova +48":{"id":"Nova +48", "group":"Български","logo":"http://logos.kodibg.org/novatv.png"},
+  "Nova +48":{"id":"Nova +48", "group":"Български","logo":"http://logos.kodibg.org/novatv.png"}
 }

@@ -157,6 +157,8 @@ __version__   = xbmc.getInfoLabel("System.BuildVersion")
 VERSION       = int(__version__[0:2])
 user_agent    = "Kodi %s" % __version__
 scheduled_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
+addon_dir     = this.getAddonInfo('path').decode('utf-8')
+mapping_file  = xbmc.translatePath(os.path.join( addon_dir, 'resources', 'mapping.json' ))
 
 ### Literals
 RUNSCRIPT     = "RunScript(%s, True)" % id

@@ -3,7 +3,8 @@ import os
 import re
 import sys
 import xbmc
-import requests 
+import json
+import requests
 from mapping import *
 
 reload(sys)  
@@ -15,6 +16,7 @@ class Playlist:
   disabled_qualities = []
   size = 0
   cache_file = ".cache"
+  streams_map = {}
 
   def __init__(self, **kwargs):
     try:
@@ -32,6 +34,10 @@ class Playlist:
       self.temp_folder = kwargs.get('temp_folder', None)
       if self.temp_folder:
         self.cache_file = os.path.join(self.temp_folder, self.cache_file)
+      
+      self.mapping_file = kwargs.get('mapping_file', None)
+      #Download mapping file
+      self.__init_streams_map__()
       
       if self.location:
         self.__load__()
@@ -166,13 +172,13 @@ class Playlist:
       stream = Stream()
       stream_name = re.compile(',(?:\d+\.)*\s*(.*)').findall(line)[0]
       stream.name = stream_name
-      stream_in_map = streams_map.get(stream_name, None)                  
+      stream_in_map = self.streams_map.get(stream_name, None)                  
       
       if stream_in_map == None: 
         #If no stream is found, strip any HD or LQ identifiers and try again
         stream_name = stream_name.replace("HD", "").replace("LQ", "")
         self.log("Stripped stream name %s" % stream_name)
-        stream_in_map = streams_map.get(stream_name, None)   
+        stream_in_map = self.streams_map.get(stream_name, None)   
         
       if stream_in_map != None:
         stream.id = stream_in_map.get("id")
@@ -290,6 +296,29 @@ class Playlist:
 
     return buffer.encode("utf-8", "replace")
 
+  def __init_streams_map__(self):
+    try:
+      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/lib/mapping.json"
+      headers = {"Accept-Encoding": "gzip, deflate"}
+      self.log("Downloading streams map from: %s " % url)
+      response = requests.get(url, headers=headers)
+      self.log("Map server status code: %s " % response.status_code)
+      if response.status_code >= 200 and response.status_code < 400:
+        #self.log(response.text)
+        streams_map = response.json()
+        #streams_map = json.loads(response.text)
+        #streams_map = response.json()
+      else:
+        self.log("Unsupported status code received from server when downloading streams map: %s" % response.status_code)
+    except Exception as ex:
+      self.log("Downloading map failed!")
+      self.log(ex)
+      self.log("Loading local map %s " % self.mapping_file)
+      with open(self.mapping_file) as data_file:    
+        streams_map = json.load(data_file)
+    self.log("Streams map loaded!")
+    
+    
   def save(self, **kwargs):
     '''
     Saves current playlist into a file
@@ -315,7 +344,7 @@ class Playlist:
     
     except Exception, er:
       self.log(er, 4)
-      return False     
+      return False
       
   def get_channel_by_name(self, name):
     for channel in self.channels:

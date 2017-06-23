@@ -25,14 +25,15 @@ try:
   location = settings.url + settings.mac
   if __DEBUG__:
     location = "http://127.0.0.1/tv/playlist.dynamicnames.m3u"
-  
+
   # Initialize the playlsit object
   pl = Playlist(location=location,
                 log=log, 
                 user_agent=user_agent, 
                 progress=progress_bar,
                 groups_from_progider=settings.groups_from_progider,
-                temp_folder=profile_dir)
+                temp_folder=profile_dir,
+                mapping_file=mapping_file)
   
   if pl.count() == 0:
     notify_error(translate(32000))
