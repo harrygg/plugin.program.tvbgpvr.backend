@@ -61,7 +61,7 @@ class Playlist:
     '''
     ret = True
     xbmc.log("__load__() started")
-    self.progress(1, "Loading playlist from: %s" % self.location)
+    self.progress(10, "Loading playlist from: %s" % self.location)
     if self.location.startswith("http") or self.location.startswith("ftp"):
       ret = self.download()
     
@@ -297,25 +297,26 @@ class Playlist:
     return buffer.encode("utf-8", "replace")
 
   def __init_streams_map__(self):
+    '''
+    Downloads mapping file. If downloads fails loads the local file.
+    '''
+    self.progress(2, "Downloading mapping file")
     try:
-      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/lib/mapping.json"
+      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       self.log("Downloading streams map from: %s " % url)
       response = requests.get(url, headers=headers)
       self.log("Map server status code: %s " % response.status_code)
       if response.status_code >= 200 and response.status_code < 400:
-        #self.log(response.text)
-        streams_map = response.json()
-        #streams_map = json.loads(response.text)
-        #streams_map = response.json()
+        self.streams_map = response.json()
       else:
         self.log("Unsupported status code received from server when downloading streams map: %s" % response.status_code)
     except Exception as ex:
       self.log("Downloading map failed!")
       self.log(ex)
       self.log("Loading local map %s " % self.mapping_file)
-      with open(self.mapping_file) as data_file:    
-        streams_map = json.load(data_file)
+      with open(self.mapping_file) as data_file:
+        self.streams_map = json.load(data_file)
     self.log("Streams map loaded!")
     
     
