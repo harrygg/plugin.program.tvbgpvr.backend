@@ -1,12 +1,12 @@
 {
   "streams" :
   {
-    "БНТ 1":{"id":"БНТ 1","group":"Български","logo":"http://logos.kodibg.org/bnt1.png"},
+    "БНТ 1":{"group":"Български","logo":"http://logos.kodibg.org/bnt1.png"},
     "BNT1 HD":{"id":"БНТ 1", "group":"Български","logo":"http://logos.kodibg.org/bnt1.png"},
     "БНТ 2":{"id":"БНТ 2", "group":"Български","logo":"http://logos.kodibg.org/bnt2.png"},
     "BNT World":{"id":"BNT World", "group":"Български","logo":"http://logos.kodibg.org/bntworld.png"},
     "БНТ HD":{"id":"БНТ HD", "group":"Спортни","logo":"http://logos.kodibg.org/bnthd.png"},
-    "bTV":{"id": "bTV","group":"Български","logo": "http://logos.kodibg.org/btv.png"},
+    "bTV":{"group":"Български","logo": "http://logos.kodibg.org/btv.png"},
     "bTV Action":{"id":"bTV Action", "group":"Филми","logo":"http://logos.kodibg.org/btvaction.png"},
     "bTV Comedy":{"id":"bTV Comedy", "group":"Филми","logo":"http://logos.kodibg.org/btvcomedy.png"},
     "bTV Cinema":{"id":"bTV Cinema", "group":"Филми","logo":"http://logos.kodibg.org/btvcinema.png"},
@@ -786,6 +786,6 @@
     "BTV +48":{"id":"BTV +48", "group":"Български","logo":"http://logos.kodibg.org/btv.png"},
     "Nova +48":{"id":"Nova +48", "group":"Български","logo":"http://logos.kodibg.org/novatv.png"}
   },
-  "revision":"3",
+  "revision":"4",
   "date":"20170704"
 }
