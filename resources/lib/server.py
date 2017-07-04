@@ -16,10 +16,10 @@ class ThreadedWSGIServer(ThreadingMixIn, WSGIServer):
   daemon_threads = True
 
 
-def create_server(app, host='', port=18910):
+def create_server(app, port=18910):
   """
-  Create a new WSGI server listening on 'host' and 'port' for WSGI app
+  Create a new WSGI server listening on 'port' for WSGI app
   """
-  return make_server(host, port, app,
+  return make_server("127.0.0.1", port, app,
                      server_class=ThreadedWSGIServer,
                      handler_class=SilentWSGIRequestHandler)

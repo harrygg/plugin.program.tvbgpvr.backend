@@ -6,7 +6,7 @@ from utils import *
 from urllib import unquote
 from bottle import route, default_app, HTTPResponse
 
-__DEBUG__ = False
+__DEBUG__ = os.environ.get('PVRDEBUG')
 app       = default_app()
 port      = settings.port
 

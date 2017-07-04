@@ -6,7 +6,7 @@ from resources.lib.utils import notify, clear_session, RUNSCRIPT
 executebuiltin(RUNSCRIPT)
 monitor = Monitor()
 
-httpd = create_server(app, LOCALHOST, port=port)
+httpd = create_server(app, port=port)
 httpd.timeout = 0.1
 starting = True
 

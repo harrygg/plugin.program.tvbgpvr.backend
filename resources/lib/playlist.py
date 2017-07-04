@@ -5,7 +5,6 @@ import sys
 import xbmc
 import json
 import requests
-from mapping import *
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
@@ -166,48 +165,49 @@ class Playlist:
   
   def parse_line(self, line):
     '''
-      Convert line into a Stream object
+      Convert text line into a Stream object
     '''
     try:
       stream = Stream()
       stream_name = re.compile(',(?:\d+\.)*\s*(.*)').findall(line)[0]
       stream.name = stream_name
-      stream_in_map = self.streams_map.get(stream_name, None)                  
-      
-      if stream_in_map == None: 
-        #If no stream is found, strip any HD or LQ identifiers and try again
-        stream_name = stream_name.replace("HD", "").replace("LQ", "")
-        self.log("Stripped stream name %s" % stream_name)
-        stream_in_map = self.streams_map.get(stream_name, None)   
-        
-      if stream_in_map != None:
-        stream.id = stream_in_map.get("id")
-        if self.groups_from_progider:
-          try: stream.group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
-          except: stream.group = "Други"
-        else:
-          stream.group = stream_in_map.get("group", "Други") 
-        stream.logo = stream_in_map.get("logo", "")
-      else:
-        stream.id = stream_name
-        if self.groups_from_progider:
-          try: stream.group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
-          except: stream.group = "Други"
-        else:
-          stream.group = "Други"
-        try: stream.logo = re.compile('logo[=\"\']+(.*?)["\'\s]+').findall(line)[0]
-        except: pass
-
-      try: stream.is_radio = len(re.compile('radio[=\"\']+T|true["\'\s]+').findall(line)) > 0
-      except: pass
-
-      try: stream.shift = re.compile('shift[=\"\']+(.*?)["\'\s]+').findall(line)[0]
-      except: pass
 
       if Quality.HD in stream_name:
         stream.quality = Quality.HD
       if Quality.LQ in stream_name:
         stream.quality = Quality.LQ
+
+      stream_in_map = self.streams_map.get(stream_name.decode("utf-8"), None)                  
+     
+      #If no stream is found, strip any HD or LQ identifiers and try again
+      if stream_in_map == None:
+        if Quality.HD in stream_name or Quality.LQ in stream_name:
+          stream_name = stream_name.replace(Quality.HD, "").replace(Quality.LQ, "").rstrip()
+          self.log("Stream '%s' not found. Searching for '%s'" % (stream.name, stream_name))
+          stream_in_map = self.streams_map.get(stream_name.decode("utf-8"), None)   
+        
+      if stream_in_map == None:
+        self.log("Stream '%s' not found." % stream_name)
+        stream.id = stream_name
+      else:
+        stream.id = stream_in_map.get("id", stream_name)
+      
+      try: 
+        if self.groups_from_progider:
+          stream.group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
+        else:
+          stream.group = stream_in_map.get("group", "Други")
+      except: 
+        stream.group = "Други"
+      
+      try: stream.logo = stream_in_map.get("logo", "")
+      except: stream.logo = ""
+      
+      try: stream.is_radio = len(re.compile('radio[=\"\']+T|true["\'\s]+').findall(line)) > 0
+      except: pass
+
+      try: stream.shift = re.compile('shift[=\"\']+(.*?)["\'\s]+').findall(line)[0]
+      except: pass
       
       return stream
 
@@ -307,16 +307,16 @@ class Playlist:
       self.log("Downloading streams map from: %s " % url)
       response = requests.get(url, headers=headers)
       self.log("Map server status code: %s " % response.status_code)
-      if response.status_code >= 200 and response.status_code < 400:
-        self.streams_map = response.json()
-      else:
-        self.log("Unsupported status code received from server when downloading streams map: %s" % response.status_code)
+      self.log("Map size: %s " % response.headers["Content-Length"])
+      if response.status_code < 200 and response.status_code >= 400:
+        raise Exception("Unsupported status code!")
+      self.streams_map = response.json()["streams"]
     except Exception as ex:
       self.log("Downloading map failed!")
       self.log(ex)
       self.log("Loading local map %s " % self.mapping_file)
       with open(self.mapping_file) as data_file:
-        self.streams_map = json.load(data_file)
+        self.streams_map = json.load(data_file)["streams"]
     self.log("Streams map loaded!")
     
     

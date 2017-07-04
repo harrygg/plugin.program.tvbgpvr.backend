@@ -64,7 +64,7 @@ def __update__(action, location, crash=None):
 def clear_session():
   try: 
     os.remove(session)
-    log("Session destroyed!")
+    log('Session destroyed!')
   except:
     pass
 
@@ -142,31 +142,36 @@ def get_disabled_groups():
     
   return disabled_groups
 
-  
+def get_location():
+  location = settings.url + settings.mac
+  if os.environ.get('PVRDEBUG'):
+    location = 'http://127.0.0.1/tv/playlist.dynamicnames.m3u'
+  return location
+   
 ## Initialize the addon
-id            = "plugin.program.tvbgpvr.backend"
+id            = 'plugin.program.tvbgpvr.backend'
 this          = xbmcaddon.Addon(id=id)
 translate     = this.getLocalizedString
 settings      = Settings()
-pl_name       = "playlist.m3u"
-profile_dir   = xbmc.translatePath( this.getAddonInfo('profile') ).decode('utf-8')
+pl_name       = 'playlist.m3u'
+profile_dir   = xbmc.translatePath(this.getAddonInfo('profile')).decode('utf-8')
 pl_path       = os.path.join(profile_dir, pl_name)
 pl_cache      = os.path.join(profile_dir, ".cache")
 session       = os.path.join(profile_dir, '.session')
-__version__   = xbmc.getInfoLabel("System.BuildVersion")
+__version__   = xbmc.getInfoLabel('System.BuildVersion')
 VERSION       = int(__version__[0:2])
-user_agent    = "Kodi %s" % __version__
+user_agent    = 'Kodi %s' % __version__
 scheduled_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
 addon_dir     = this.getAddonInfo('path').decode('utf-8')
 mapping_file  = xbmc.translatePath(os.path.join( addon_dir, 'resources', 'mapping.json' ))
+progress_bar  = None
 
 ### Literals
-RUNSCRIPT     = "RunScript(%s, True)" % id
+RUNSCRIPT     = 'RunScript(%s, True)' % id
 GET           = 'GET'
 HEAD          = 'HEAD'
-LOCALHOST     = "127.0.0.1"
-NEWLINE       = "\n"
-STREAM_URL    = "http://127.0.0.1:%s/tvbgpvr.backend/stream/%s"
+NEWLINE       = '\n'
+STREAM_URL    = 'http://127.0.0.1:%s/tvbgpvr.backend/stream/%s'
 
 ### Addon starts
 if settings.firstrun:
