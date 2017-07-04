@@ -593,7 +593,7 @@
     "RTL9 (Fr)":{"id":"RTL9 (Fr)", "group":"Френски","logo":"https://upload.wikimedia.org/wikipedia/en/0/01/RTL9_logo_2011.png"},
     "BFM HD":{"id":"BFM HD", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/BFM_TV.png"},
     "TV5 Monde":{"id":"TV5 Monde", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/TV5Monde-1.png"},
-    "TV 5 Monde HD":{"id":"TV 5 Monde", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/TV5Monde-1.png"},
+    "TV 5 Monde HD":{"id":"TV5 Monde", "group":"Френски","logo":"https://cdn.sat.tv/wp-content/uploads/2016/05/TV5Monde-1.png"},
     "France 2":{"id":"France 2", "group":"Френски","logo":"http://cyril.bourreau.free.fr/Vectoriel/FR2-DSK-couleur.png"},
     "France 3":{"id":"France 3", "group":"Френски","logo":"http://medias.unifrance.org/medias/195/93/24003/format_page/media.png"},
     "France 4":{"id":"France 4", "group":"Френски","logo":"http://vignette4.wikia.nocookie.net/logopedia/images/e/ea/France_4_2014.png/revision/latest?cb=20140321183249"},
@@ -786,6 +786,6 @@
     "BTV +48":{"id":"BTV +48", "group":"Български","logo":"http://logos.kodibg.org/btv.png"},
     "Nova +48":{"id":"Nova +48", "group":"Български","logo":"http://logos.kodibg.org/novatv.png"}
   },
-  "revision":"2",
+  "revision":"3",
   "date":"20170704"
 }
