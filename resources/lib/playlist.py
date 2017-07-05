@@ -183,25 +183,46 @@ class Playlist:
       if stream_in_map == None:
         if Quality.HD in stream_name or Quality.LQ in stream_name:
           stream_name = stream_name.replace(Quality.HD, "").replace(Quality.LQ, "").rstrip()
-          self.log("Stream '%s' not found. Searching for '%s'" % (stream.name, stream_name))
+          self.log("Stream name '%s' not found. Searching for '%s'" % (stream.name, stream_name))
           stream_in_map = self.streams_map.get(stream_name.decode("utf-8"), None)   
-        
-      if stream_in_map == None:
-        self.log("Stream '%s' not found." % stream_name)
-        stream.id = stream_name
-      else:
-        stream.id = stream_in_map.get("id", stream_name)
       
+      ### Get stream ID. If it doesn't exist use the stream name.
+      # if stream_in_map == None:
+        # self.log("Stream '%s' not found. Using name as ID" % stream_name)
+        # stream.id = stream_name
+      # else:
+        # self.log("id set to %s" % stream_name)
+      stream.id = stream_in_map.get("id", stream_name)
+      self.log("Stream ID set to %s " % stream.id)
+      
+      ### Group
+      ##
       try: 
         if self.groups_from_progider:
           stream.group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
         else:
-          stream.group = stream_in_map.get("group", "Други")
-      except: 
-        stream.group = "Други"
+          stream.group = stream_in_map["group"]
+      except:
+        ## Try go guess channel group
+        if len(re.compile("S|sport").findall(stream.name)) > 0:
+          stream.group = "Спортни"
+        elif len(re.compile("M|movie").findall(stream.name)) > 0:
+          stream.group = "Филми"
+        elif len(re.compile("M|music").findall(stream.name)) > 0:
+          stream.group = "Музикални"
+        else:
+          stream.group = "Други"
       
-      try: stream.logo = stream_in_map.get("logo", "")
-      except: stream.logo = ""
+      ### Logo
+      ## If no logo is in map, logo name is equal to lowercase channel name without white spaces.
+      ## If logo is in map but without HTTP prefix, then that's the logo name
+      tmp = "https://raw.githubusercontent.com/harrygg/EPG/master/logos/%s.png"
+      try: 
+        stream.logo = stream_in_map["logo"]
+        if not stream.logo.startswith("http"):
+          stream.logo = tmp % stream.logo
+      except: 
+        stream.logo = tmp % stream.id.lower().replace(" ", "").replace("(", "").replace(")", "").replace("+", "plus")
       
       try: stream.is_radio = len(re.compile('radio[=\"\']+T|true["\'\s]+').findall(line)) > 0
       except: pass
