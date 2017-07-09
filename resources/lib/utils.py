@@ -21,12 +21,12 @@ class Settings():
 
   def __setattr__(self, name, value):
     this.setSetting(name, str(value))
-    
-  
-def log(msg, level = xbmc.LOGNOTICE):
+
+def log(msg, level=xbmc.LOGNOTICE):
   if level == xbmc.LOGERROR:
     import traceback
-    xbmc.log('%s | %s' % (id, traceback.format_exc()), xbmc.LOGERROR)
+    msg += "\n" + traceback.format_exc()
+    xbmc.log('%s | %s' % (id, msg), xbmc.LOGERROR)
   else:
     if settings.debug:
       xbmc.log("%s | %s" % (id, msg), level)
@@ -172,6 +172,27 @@ GET           = 'GET'
 HEAD          = 'HEAD'
 NEWLINE       = '\n'
 STREAM_URL    = 'http://127.0.0.1:%s/tvbgpvr.backend/stream/%s'
+
+group_ids = {
+  "bg":"32100", 
+  "en","32101",
+  "mv","32102",
+  "st","32103",
+  "dc","32104",
+  "th","32105",
+  "de","32106",
+  "as","32107",
+  "nw","32108",
+  "mu","32109",
+  "ki","32110",
+  "it","32111",
+  "tr","32112",
+  "fr","32113",
+  "nl","32114",
+  "xx","32115",
+  "ot","32116",
+  "sr","32117"
+}
 
 ### Addon starts
 if settings.firstrun:

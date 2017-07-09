@@ -2,7 +2,6 @@
 import os
 import re
 import sys
-import xbmc
 import json
 import requests
 
@@ -20,35 +19,40 @@ class Playlist:
   def __init__(self, **kwargs):
     try:
       ## keyword arguments
-      self.location = kwargs.get('location', None)
-      self.log_callback = kwargs.get('log', None)
-      self.progress_callback = kwargs.get('progress', None)
+      self.location = kwargs.get('location')
+      self.log_callback = kwargs.get('log')
+      slef.translate = kwargs.get('translate')
+      self.progress_callback = kwargs.get('progress')
       self.name = kwargs.get('name', 'playlist.m3u')
-      self.include_radios = kwargs.get('include_radios', True)
+      self.include_radios = kwargs.get('include_radios', False)
       self.template_file = kwargs.get('template_file', 'order.txt')
-      self.user_agent = kwargs.get('user_agent', None)
+      self.user_agent = kwargs.get('user_agent')
       self.groups_from_progider = kwargs.get('groups_from_progider', False)
       self.type = kwargs.get('type', PlaylistType.KODIPVR)
       #self.preffered_quality = kwargs.get('preffered_quality', None)
-      self.temp_folder = kwargs.get('temp_folder', None)
+      self.temp_folder = kwargs.get('temp_folder')
       if self.temp_folder:
         self.cache_file = os.path.join(self.temp_folder, self.cache_file)
       
-      self.mapping_file = kwargs.get('mapping_file', None)
+      self.mapping_file = kwargs.get('mapping_file')
       #Download mapping file
-      self.__init_streams_map__()
+      self.__load_map__()
       
       if self.location:
         self.__load__()
 
       self.log("Playlist initialized with %s channels" % self.count())
     except Exception as e:
-      xbmc.log(str(e), 4)
+      self.log("__init__() " + str(e), 4)
       raise
 
-  def log(self, msg, level = xbmc.LOGNOTICE):
+  def log(self, msg, level=2):
     if self.log_callback:
       self.log_callback(str(msg), level)
+      
+  def translate(self, msg):
+    if self.translate:
+      self.translate(msg)
 
   def progress(self, percent, msg):
     if self.progress_callback:
@@ -59,14 +63,14 @@ class Playlist:
     Loads m3u from given location - local storage or online resource
     '''
     ret = True
-    xbmc.log("__load__() started")
+    self.log("__load__() started")
     self.progress(10, "Loading playlist from: %s" % self.location)
     if self.location.startswith("http") or self.location.startswith("ftp"):
       ret = self.download()
     
     if ret:
       self.parse()
-    xbmc.log("__load__() ended")
+    self.log("__load__() ended")
 
   def download(self):
     try:
@@ -90,10 +94,9 @@ class Playlist:
   def get_chunk_size(self, response):
     try:
       size = int(response.headers['Content-length'])
-      if size > 0:
-        return size / 100
-    except: 
-      return 2048
+      if size > 0: return size/100
+    except: pass
+    return 2048
   
   def iter_lines(self, response, chunk_size, delimiter=None):
     '''
@@ -139,11 +142,10 @@ class Playlist:
     '''
       Parse any given m3u file line by line
     '''
-    xbmc.log("parse() started")
+    self.log("parse() started")
     percent = 0  
     stream = None
     self.progress(0, "Parsing playlist")
-    #xbmc.sleep(500)
     with open(self.location, "r") as file_content:
       for i, line in enumerate(file_content):
         if self.size > 0: 
@@ -187,42 +189,21 @@ class Playlist:
           stream_in_map = self.streams_map.get(stream_name.decode("utf-8"), None)   
       
       ### Get stream ID. If it doesn't exist use the stream name.
-      # if stream_in_map == None:
-        # self.log("Stream '%s' not found. Using name as ID" % stream_name)
-        # stream.id = stream_name
-      # else:
-        # self.log("id set to %s" % stream_name)
-      stream.id = stream_in_map.get("id", stream_name)
+      if stream_in_map == None:
+        self.log("Stream '%s' not found. Using name as ID" % stream_name)
+        stream.id = stream_name
+      else:
+        self.log("Stream found, ID set to %s" % stream_name)
+        stream.id = stream_in_map.get("id", stream_name)
       self.log("Stream ID set to %s " % stream.id)
       
       ### Group
-      ##
-      try: 
-        if self.groups_from_progider:
-          stream.group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
-        else:
-          stream.group = stream_in_map["group"]
-      except:
-        ## Try go guess channel group
-        if len(re.compile("S|sport").findall(stream.name)) > 0:
-          stream.group = "Спортни"
-        elif len(re.compile("M|movie").findall(stream.name)) > 0:
-          stream.group = "Филми"
-        elif len(re.compile("M|music").findall(stream.name)) > 0:
-          stream.group = "Музикални"
-        else:
-          stream.group = "Други"
+      stream.group = get_group(stream_in_map, line)
+      
       
       ### Logo
-      ## If no logo is in map, logo name is equal to lowercase channel name without white spaces.
-      ## If logo is in map but without HTTP prefix, then that's the logo name
-      tmp = "https://raw.githubusercontent.com/harrygg/EPG/master/logos/%s.png"
-      try: 
-        stream.logo = stream_in_map["logo"]
-        if not stream.logo.startswith("http"):
-          stream.logo = tmp % stream.logo
-      except: 
-        stream.logo = tmp % stream.id.lower().replace(" ", "").replace("(", "").replace(")", "").replace("+", "plus")
+      stream.logo = get_logo(stream_in_map, line)
+      
       
       try: stream.is_radio = len(re.compile('radio[=\"\']+T|true["\'\s]+').findall(line)) > 0
       except: pass
@@ -235,7 +216,40 @@ class Playlist:
     except Exception, er:
       self.log(er, 4)
       return False
-  
+
+def get_logo(stream_in_map, line):
+  ## If no logo is in map, logo name is equal to lowercase channel name without white spaces.
+  ## If logo is in map but without HTTP prefix, then that's the logo name
+  url = "https://raw.githubusercontent.com/harrygg/EPG/master/logos/%s.png"
+  try: 
+    stream.logo = stream_in_map["logo"]
+    if not stream.logo.startswith("http"):
+      stream.logo = url % stream.logo
+  except: 
+    stream.logo = url % stream.id.lower().replace(" ", "").replace("(", "").replace(")", "").replace("&", "").replace("+", "plus").replace("-", "minus").replace("%","").replace("/","")
+      
+
+def get_group(self, stream_in_map, line):
+  group = None
+  try: 
+    if self.groups_from_progider:
+      group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
+    else:
+      group_id = stream_in_map["g"]
+      group = self.translate(group_ids[group_id])
+  except:
+    ## Try go guess channel group
+    if len(re.compile("S|sport").findall(stream.name)) > 0:
+      group = self.translate(group_ids["st"])
+    elif len(re.compile("M|movie").findall(stream.name)) > 0:
+      group = self.translate(group_ids["mv"])
+    elif len(re.compile("M|music").findall(stream.name)) > 0:
+      group = self.translate(group_ids["mu"])
+    else:
+      group = self.translate(group_ids["ot"])
+      
+  return group
+      
   def disable_group(self, group_name):
     self.disabled_groups.append(group_name)
   
@@ -255,10 +269,8 @@ class Playlist:
     template_order = self.load_order_template()
     
     for stream in self.streams:
-      try:
-        stream.order = template_order[stream.name]
-      except:
-        pass
+      try: stream.order = template_order[stream.name]
+      except: pass
     
     self.streams = sorted(self.streams, key=lambda stream: stream.order)
     self.log("reorder() ended")
@@ -317,13 +329,13 @@ class Playlist:
 
     return buffer.encode("utf-8", "replace")
 
-  def __init_streams_map__(self):
+  def __load_map__(self):
     '''
     Downloads mapping file. If downloads fails loads the local file.
     '''
     self.progress(2, "Downloading mapping file")
     try:
-      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
+      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mappin g.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       self.log("Downloading streams map from: %s " % url)
       response = requests.get(url, headers=headers)
@@ -396,7 +408,7 @@ class Quality:
   HD = "HD"
   SD = "SD"
   LQ = "LQ"
-  UNKNOWN = "UNKNOWN"
+  UN = "UNKNOWN"
 
 class Stream:
   name = None

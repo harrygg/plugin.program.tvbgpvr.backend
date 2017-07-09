@@ -59,3 +59,75 @@ msgstr ""
 msgctxt "#32008"
 msgid "Stream not found for channel %s"
 msgstr ""
+
+msgctxt "#32100"
+msgid "Bulgarian"
+msgstr "Bulgarian"
+
+msgctxt "#32101"
+msgid "English"
+msgstr "English"
+
+msgctxt "#32102"
+msgid "Movies"
+msgstr "Movies"
+
+msgctxt "#32103"
+msgid "Sports"
+msgstr "Sports"
+
+msgctxt "#32104"
+msgid "Documental"
+msgstr "Documental"
+
+msgctxt "#32105"
+msgid "Theme"
+msgstr "Theme"
+
+msgctxt "#32106"
+msgid "Deutch"
+msgstr "Deutch"
+
+msgctxt "#32107"
+msgid "Asian"
+msgstr "Asian"
+
+msgctxt "#32108"
+msgid "News"
+msgstr "News"
+
+msgctxt "#32109"
+msgid "Music"
+msgstr "Music"
+
+msgctxt "#32110"
+msgid "Kids"
+msgstr "Kids"
+
+msgctxt "#32111"
+msgid "Italian"
+msgstr "Italian"
+
+msgctxt "#32112"
+msgid "Turkish"
+msgstr "Turkish"
+
+msgctxt "#32113"
+msgid "French"
+msgstr "French"
+
+msgctxt "#32114"
+msgid "Netherlands"
+msgstr "Netherlands"
+
+msgctxt "#32115"
+msgid "Adults"
+msgstr "Adults"
+
+msgctxt "#32116"
+msgid "Others"
+msgstr "Others"
+
+msgctxt "#32117"
+msgid "Serbian"
+msgstr "Serbian"
