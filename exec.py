@@ -7,7 +7,7 @@ from resources.lib.utils import *
 from resources.lib.playlist import *
 
 #append_pydev_remote_debugger
-if os.environ.get('PVRDEBUG'):
+if not os.environ.get('PVRDEBUG'):
   sys.path.append(os.environ['PYSRC'])
   import pydevd
   pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)

@@ -4,6 +4,7 @@ import re
 import sys
 import json
 import requests
+from utils import *
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
@@ -15,13 +16,32 @@ class Playlist:
   size = 0
   cache_file = ".cache"
   streams_map = {}
-
+  groups_map = {
+    "bg": "Български",
+    "en": "Английски",
+    "mv": "Филми",
+    "st": "Спортни",
+    "dc": "Документални",
+    "th": "Тематични",
+    "de": "Немски",
+    "as": "Азиатски",
+    "nw": "Новини",
+    "mu": "Музикални",
+    "ki": "Детски",
+    "it": "Италиански",
+    "tr": "Турски",
+    "fr": "Френски",
+    "nl": "Холандски",
+    "xx": "Възрастни",
+    "ot": "Други",
+    "sr": "Сръбски"
+  }
+  
   def __init__(self, **kwargs):
     try:
       ## keyword arguments
       self.location = kwargs.get('location')
       self.log_callback = kwargs.get('log')
-      slef.translate = kwargs.get('translate')
       self.progress_callback = kwargs.get('progress')
       self.name = kwargs.get('name', 'playlist.m3u')
       self.include_radios = kwargs.get('include_radios', False)
@@ -49,10 +69,6 @@ class Playlist:
   def log(self, msg, level=2):
     if self.log_callback:
       self.log_callback(str(msg), level)
-      
-  def translate(self, msg):
-    if self.translate:
-      self.translate(msg)
 
   def progress(self, percent, msg):
     if self.progress_callback:
@@ -162,7 +178,7 @@ class Playlist:
             stream.url = line.rstrip()
             self.streams.append(stream)
             
-            stream = Stream() #reset
+            stream = None #reset
   
   
   def parse_line(self, line):
@@ -170,44 +186,12 @@ class Playlist:
       Convert text line into a Stream object
     '''
     try:
-      stream = Stream()
-      stream_name = re.compile(',(?:\d+\.)*\s*(.*)').findall(line)[0]
-      stream.name = stream_name
-
-      if Quality.HD in stream_name:
-        stream.quality = Quality.HD
-      if Quality.LQ in stream_name:
-        stream.quality = Quality.LQ
-
-      stream_in_map = self.streams_map.get(stream_name.decode("utf-8"), None)                  
-     
-      #If no stream is found, strip any HD or LQ identifiers and try again
-      if stream_in_map == None:
-        if Quality.HD in stream_name or Quality.LQ in stream_name:
-          stream_name = stream_name.replace(Quality.HD, "").replace(Quality.LQ, "").rstrip()
-          self.log("Stream name '%s' not found. Searching for '%s'" % (stream.name, stream_name))
-          stream_in_map = self.streams_map.get(stream_name.decode("utf-8"), None)   
-      
-      ### Get stream ID. If it doesn't exist use the stream name.
-      if stream_in_map == None:
-        self.log("Stream '%s' not found. Using name as ID" % stream_name)
-        stream.id = stream_name
-      else:
-        self.log("Stream found, ID set to %s" % stream_name)
-        stream.id = stream_in_map.get("id", stream_name)
-      self.log("Stream ID set to %s " % stream.id)
-      
-      ### Group
-      stream.group = get_group(stream_in_map, line)
-      
-      
-      ### Logo
-      stream.logo = get_logo(stream_in_map, line)
-      
-      
-      try: stream.is_radio = len(re.compile('radio[=\"\']+T|true["\'\s]+').findall(line)) > 0
-      except: pass
-
+      name = re.compile(',(?:\d+\.)*\s*(.*)').findall(line)[0]
+      stream = Stream(name)
+      props = self.__get_stream_properties(name)
+      stream.id = self.__get_id(props)      
+      stream.group = self.__get_group(props, line)
+      stream.logo = self.__get_logo(props)
       try: stream.shift = re.compile('shift[=\"\']+(.*?)["\'\s]+').findall(line)[0]
       except: pass
       
@@ -216,40 +200,74 @@ class Playlist:
     except Exception, er:
       self.log(er, 4)
       return False
+ 
+  def __get_stream_properties(self, stream_name):
+    name = stream_name
+    props = {"name":stream_name}
+    _props = self.streams_map.get(stream_name.decode("utf-8"))                  
+    #If no stream is found, strip any HD or LQ identifiers and try again
+    if _props == None:
+      if Quality.HD in name or Quality.LQ in name:
+        name = name.replace(Quality.HD, "").replace(Quality.LQ, "").rstrip()
+        self.log("Stream name '%s' not found. Searching for '%s'" % (stream_name, name))
+        _props = self.streams_map.get(name.decode("utf-8"))
+    
+    if _props != None:
+      props.update(_props)
+    
+    return props
+      
+  def __get_id(self, props):
+    ### Get stream ID. If it doesn't exist use the stream name.
+    id = props.get("id", props["name"])
+    self.log("Stream ID for channel '%s' set to '%s'" % (props["name"], id))  
+    return id
+  
+  def __get_group(self, props, line):
+    group = None
+    try: 
+      if self.groups_from_progider:
+        group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
+      else:
+        group_id = props["g"]
+        group = self.groups_map[group_id]
+    except:
+      ## Try go guess channel group
+      if len(re.compile("S|spor").findall(props["name"])) > 0:
+        group = self.groups_map["st"]
+      elif len(re.compile("M|movie").findall(props["name"])) > 0 or len(re.compile("F|film").findall(props["name"])) > 0:
+        group = self.groups_map["mv"]
+      elif len(re.compile("M|music").findall(props["name"])) > 0:
+        group = self.groups_map["mu"]
+      elif len(re.compile("XX|xx").findall(props["name"])) > 0:
+        group = self.groups_map["xx"]      
+      elif len(re.compile("P|pink").findall(props["name"])) > 0:
+        group = self.groups_map["sr"]
+      else:
+        group = self.groups_map["ot"]
+    
+    self.log("Stream group set to '%s'" % group)
+    return group
 
-def get_logo(stream_in_map, line):
-  ## If no logo is in map, logo name is equal to lowercase channel name without white spaces.
-  ## If logo is in map but without HTTP prefix, then that's the logo name
-  url = "https://raw.githubusercontent.com/harrygg/EPG/master/logos/%s.png"
-  try: 
-    stream.logo = stream_in_map["logo"]
-    if not stream.logo.startswith("http"):
-      stream.logo = url % stream.logo
-  except: 
-    stream.logo = url % stream.id.lower().replace(" ", "").replace("(", "").replace(")", "").replace("&", "").replace("+", "plus").replace("-", "minus").replace("%","").replace("/","")
-      
-
-def get_group(self, stream_in_map, line):
-  group = None
-  try: 
-    if self.groups_from_progider:
-      group = re.compile('group-title[="\']+(.*?)"').findall(line)[0]
-    else:
-      group_id = stream_in_map["g"]
-      group = self.translate(group_ids[group_id])
-  except:
-    ## Try go guess channel group
-    if len(re.compile("S|sport").findall(stream.name)) > 0:
-      group = self.translate(group_ids["st"])
-    elif len(re.compile("M|movie").findall(stream.name)) > 0:
-      group = self.translate(group_ids["mv"])
-    elif len(re.compile("M|music").findall(stream.name)) > 0:
-      group = self.translate(group_ids["mu"])
-    else:
-      group = self.translate(group_ids["ot"])
-      
-  return group
-      
+  def __get_logo(self, props):
+    '''
+    If no logo is in map, logo name is equal to lowercase channel name removing weird chars.
+    If logo is in map but without HTTP prefix, then that's the logo name
+    '''
+    url = "https://raw.githubusercontent.com/harrygg/EPG/master/logos/%s.png"
+    logo = None
+    try: 
+      logo = props["l"]
+    except:
+      #convert cyrilic names to latin
+      name = props["name"].replace(" ", "").replace("(", "").replace(")", "").replace("&", "").replace("+", "plus").replace("-", "minus").replace("%","").replace("/","").replace("!","").replace(":","")
+      logo = name.decode('utf-8').translate(trans_table)
+      logo = logo.lower()
+    if not logo.startswith("http"):
+      logo = url % logo
+    self.log("Logo for channel '%s' set to '%s'" % (props["name"], logo))
+    return logo
+    
   def disable_group(self, group_name):
     self.disabled_groups.append(group_name)
   
@@ -263,7 +281,6 @@ def get_group(self, stream_in_map, line):
         template_file: a template txt file with channel names.  
           Template files contains channel names - single name on each a row
     '''
-    
     self.log("reorder() started")
     self.template_file = kwargs.get('template_file', self.template_file)
     template_order = self.load_order_template()
@@ -335,7 +352,7 @@ def get_group(self, stream_in_map, line):
     '''
     self.progress(2, "Downloading mapping file")
     try:
-      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mappin g.json"
+      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       self.log("Downloading streams map from: %s " % url)
       response = requests.get(url, headers=headers)
@@ -411,6 +428,7 @@ class Quality:
   UN = "UNKNOWN"
 
 class Stream:
+
   name = None
   id = None
   url = None
@@ -421,6 +439,16 @@ class Stream:
   disabled = False
   order = 9999
   quality = Quality.SD
+
+  
+  def __init__(self, name):
+  
+    self.name = name
+    if Quality.HD in name:
+      self.quality = Quality.HD
+    if Quality.LQ in name:
+      self.quality = Quality.LQ
+
 
   def to_string(self, type):
   
@@ -445,6 +473,7 @@ class Stream:
     buffer += '%s\n' % self.url
 
     return buffer
+
 
 M3U_START_MARKER = "#EXTM3U"
 M3U_INFO_MARKER = "#EXTINF"

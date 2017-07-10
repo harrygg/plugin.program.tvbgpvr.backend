@@ -25,8 +25,7 @@ class Settings():
 def log(msg, level=xbmc.LOGNOTICE):
   if level == xbmc.LOGERROR:
     import traceback
-    msg += "\n" + traceback.format_exc()
-    xbmc.log('%s | %s' % (id, msg), xbmc.LOGERROR)
+    xbmc.log('%s | %s' % (id, traceback.format_exc()), xbmc.LOGERROR)
   else:
     if settings.debug:
       xbmc.log("%s | %s" % (id, msg), level)
@@ -141,7 +140,7 @@ def get_disabled_groups():
     disabled_groups.append('culture')  
     
   return disabled_groups
-
+  
 def get_location():
   location = settings.url + settings.mac
   if os.environ.get('PVRDEBUG'):
@@ -164,6 +163,9 @@ user_agent    = 'Kodi %s' % __version__
 scheduled_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
 addon_dir     = this.getAddonInfo('path').decode('utf-8')
 mapping_file  = xbmc.translatePath(os.path.join( addon_dir, 'resources', 'mapping.json' ))
+symbols       = ("абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", 
+                 "abvgdeejzijklmnoprstufhzcss_y_euaABVGDEEJZIJKLMNOPRSTUFHZCSS_Y_EUA")
+trans_table   = {ord(a):ord(b) for a, b in zip(*symbols)}
 progress_bar  = None
 
 ### Literals
@@ -172,27 +174,6 @@ GET           = 'GET'
 HEAD          = 'HEAD'
 NEWLINE       = '\n'
 STREAM_URL    = 'http://127.0.0.1:%s/tvbgpvr.backend/stream/%s'
-
-group_ids = {
-  "bg":"32100", 
-  "en","32101",
-  "mv","32102",
-  "st","32103",
-  "dc","32104",
-  "th","32105",
-  "de","32106",
-  "as","32107",
-  "nw","32108",
-  "mu","32109",
-  "ki","32110",
-  "it","32111",
-  "tr","32112",
-  "fr","32113",
-  "nl","32114",
-  "xx","32115",
-  "ot","32116",
-  "sr","32117"
-}
 
 ### Addon starts
 if settings.firstrun:
