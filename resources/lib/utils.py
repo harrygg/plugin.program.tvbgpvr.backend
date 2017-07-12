@@ -112,6 +112,8 @@ def get_disabled_groups():
     disabled_groups.append('Български') 
   if settings.hide_asia:
     disabled_groups.append('Азиатски') 
+  if settings.hide_greek:
+    disabled_groups.append('Гръцки') 
   if settings.hide_others:
     disabled_groups.append('Други')
   if settings.hide_information_pr:
