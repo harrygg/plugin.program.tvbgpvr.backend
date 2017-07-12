@@ -26,7 +26,6 @@ try:
   # Initialize the playlsit object
   pl = Playlist(location=get_location(),
                 log=log, 
-                translate=translate, 
                 user_agent=user_agent, 
                 progress=progress_bar,
                 groups_from_progider=settings.groups_from_progider,
