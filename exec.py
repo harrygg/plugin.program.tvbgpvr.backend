@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
 import xbmc
 import urllib
 import xbmcgui
-import xbmcaddon
 from resources.lib.utils import *
 from resources.lib.playlist import *
 
+<<<<<<< HEAD
 __DEBUG__ = False
 progress_bar = None
+=======
+#append_pydev_remote_debugger
+if not os.environ.get('PVRDEBUG'):
+  sys.path.append(os.environ['PYSRC'])
+  import pydevd
+  pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
+#end_append_pydev_remote_debugger	
+>>>>>>> jsonmap
 
-log("on %s " % user_agent)
+log("Started on %s" % user_agent)
 if scheduled_run:
   log(translate(32004))
   
@@ -21,18 +28,15 @@ if not scheduled_run or settings.debug:
   progress_bar.create(heading=this.getAddonInfo('name'))
 
 try:
-  # Get playlist location from settings
-  location = settings.url + settings.mac
-  if __DEBUG__:
-    location = "http://127.0.0.1/tv/playlist.dynamicnames.m3u"
-  
   # Initialize the playlsit object
-  pl = Playlist(location=location,
+  pl = Playlist(location=get_location(),
                 log=log, 
+                translate=translate, 
                 user_agent=user_agent, 
                 progress=progress_bar,
                 groups_from_progider=settings.groups_from_progider,
-                temp_folder=profile_dir)
+                temp_folder=profile_dir,
+                mapping_file=mapping_file)
   
   if pl.count() == 0:
     notify_error(translate(32000))
@@ -69,7 +73,7 @@ try:
 
     ### Copy playlist to additional folder if specified
     if settings.copy_playlist and os.path.isdir(settings.copy_to_folder):
-      pl.save( path=os.path.join(settings.copy_to_folder, pl_name) )
+      pl.save(path=os.path.join(settings.copy_to_folder, pl_name))
 
 except Exception, er:
   log(er, xbmc.LOGERROR)
