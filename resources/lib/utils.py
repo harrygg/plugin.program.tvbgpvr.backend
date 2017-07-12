@@ -144,7 +144,7 @@ def get_disabled_groups():
 def get_location():
   location = settings.url + settings.mac
   if os.environ.get('PVRDEBUG'):
-    location = 'http://127.0.0.1/tv/playlist.dynamicnames.m3u'
+    location = 'http://127.0.0.1/tv/playlist.m3u'
   return location
    
 ## Initialize the addon
@@ -163,9 +163,6 @@ user_agent    = 'Kodi %s' % __version__
 scheduled_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
 addon_dir     = this.getAddonInfo('path').decode('utf-8')
 mapping_file  = xbmc.translatePath(os.path.join( addon_dir, 'resources', 'mapping.json' ))
-symbols       = ("абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", 
-                 "abvgdeejzijklmnoprstufhzcss_y_euaABVGDEEJZIJKLMNOPRSTUFHZCSS_Y_EUA")
-trans_table   = {ord(a):ord(b) for a, b in zip(*symbols)}
 progress_bar  = None
 
 ### Literals

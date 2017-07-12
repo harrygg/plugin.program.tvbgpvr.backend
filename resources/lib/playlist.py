@@ -219,8 +219,10 @@ class Playlist:
       
   def __get_id(self, props):
     ### Get stream ID. If it doesn't exist use the stream name.
-    id = props.get("id", props["name"])
-    self.log("Stream ID for channel '%s' set to '%s'" % (props["name"], id))  
+    id = props.get("id")
+    if id == None:
+      id = props.get("name").replace(Quality.HD, "").replace(Quality.SD, "").rstrip()
+    self.log("Stream ID for channel '%s' set to '%s'" % (props.get("name"), id))  
     return id
   
   def __get_group(self, props, line):
@@ -233,16 +235,18 @@ class Playlist:
         group = self.groups_map[group_id]
     except:
       ## Try go guess channel group
-      if len(re.compile("S|spor").findall(props["name"])) > 0:
+      if len(re.compile("spor", re.IGNORECASE).findall(props["name"])) > 0:
         group = self.groups_map["st"]
-      elif len(re.compile("M|movie").findall(props["name"])) > 0 or len(re.compile("F|film").findall(props["name"])) > 0:
+      elif len(re.compile("(movie)|(film)", re.IGNORECASE).findall(props["name"])) > 0:
         group = self.groups_map["mv"]
-      elif len(re.compile("M|music").findall(props["name"])) > 0:
+      elif len(re.compile("music", re.IGNORECASE).findall(props["name"])) > 0:
         group = self.groups_map["mu"]
-      elif len(re.compile("XX|xx").findall(props["name"])) > 0:
-        group = self.groups_map["xx"]      
-      elif len(re.compile("P|pink").findall(props["name"])) > 0:
+      elif len(re.compile("xx", re.IGNORECASE).findall(props["name"])) > 0:
+        group = self.groups_map["xx"]
+      elif len(re.compile("pink", re.IGNORECASE).findall(props["name"])) > 0:
         group = self.groups_map["sr"]
+      elif len(re.compile("NL").findall(props["name"])) > 0:
+        group = self.groups_map["nl"]
       else:
         group = self.groups_map["ot"]
     
@@ -261,8 +265,7 @@ class Playlist:
     except:
       #convert cyrilic names to latin
       name = props["name"].replace(" ", "").replace("(", "").replace(")", "").replace("&", "").replace("+", "plus").replace("-", "minus").replace("%","").replace("/","").replace("!","").replace(":","")
-      logo = name.decode('utf-8').translate(trans_table)
-      logo = logo.lower()
+      logo = name.lower()
     if not logo.startswith("http"):
       logo = url % logo
     self.log("Logo for channel '%s' set to '%s'" % (props["name"], logo))
