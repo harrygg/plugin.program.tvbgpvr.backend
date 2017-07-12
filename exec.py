@@ -6,12 +6,12 @@ import xbmcgui
 from resources.lib.utils import *
 from resources.lib.playlist import *
 
-#append_pydev_remote_debugger
-if not os.environ.get('PVRDEBUG'):
-  sys.path.append(os.environ['PYSRC'])
-  import pydevd
-  pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
-#end_append_pydev_remote_debugger	
+# #append_pydev_remote_debugger
+# if os.environ.get('PVRDEBUG'):
+  # sys.path.append(os.environ['PYSRC'])
+  # import pydevd
+  # pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
+# #end_append_pydev_remote_debugger	
 
 log("Started on %s" % user_agent)
 if scheduled_run:
