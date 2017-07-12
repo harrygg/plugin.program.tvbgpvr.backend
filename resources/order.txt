@@ -1,9 +1,3 @@
-HBO HD
-HBO 2 HD
-HBO 3 HD
-Moviestar HD
-Viasat Sport HD
-C&I Networks
 BNT1 HD
 bTV HD
 Nova
@@ -13,6 +7,11 @@ Bulgaria on Air
 ТВ Европа
 Diema Sport HD
 Diema Sport 2 HD
+HBO HD
+HBO 2 HD
+HBO 3 HD
+Moviestar HD
+Viasat Sport HD
 RING BG HD
 Sport+ HD
 Viasat Explorer
@@ -26,6 +25,7 @@ NatGeo HD
 NatGeo Wild HD
 History Channel
 History 2 HD
+C&I Networks
 bTV Action HD
 bTV Cinema
 KinoNova
