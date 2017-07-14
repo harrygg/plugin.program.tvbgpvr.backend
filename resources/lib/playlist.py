@@ -4,6 +4,7 @@ import re
 import sys
 import json
 import requests
+import string
 from utils import *
 
 reload(sys)  
@@ -187,7 +188,7 @@ class Playlist:
       Convert text line into a Stream object
     '''
     try:
-      name = re.compile(',(?:\d+\.)*\s*(.*)').findall(line)[0]
+      name = re.compile(',(?:\d+\.)*\s*(.*)').findall(line)[0].replace(",","") #remove comma from name i.e. Cosmo HD (es,en)
       stream = Stream(name)
       props = self.__get_stream_properties(name)
       stream.id = self.__get_id(props)      
@@ -222,7 +223,7 @@ class Playlist:
     ### Get stream ID. If it doesn't exist use the stream name.
     id = props.get("id")
     if id == None:
-      id = props.get("name").replace(Quality.HD, "").replace(Quality.SD, "").rstrip()
+      id = props.get("name").replace(" " + Quality.HD, "").replace(Quality.HD, "").rstrip()
     self.log("Stream ID for channel '%s' set to '%s'" % (props.get("name"), id))  
     return id
   
@@ -256,7 +257,8 @@ class Playlist:
 
   def __get_logo(self, props):
     '''
-    If no logo is in map, logo name is equal to lowercase channel name removing weird chars.
+    If no logo is in map, logo name is equal to lowercase channel name removing some special chars
+    and translating cyrilic to latin
     If logo is in map but without HTTP prefix, then that's the logo name
     '''
     url = "https://raw.githubusercontent.com/harrygg/EPG/master/logos/%s.png"
@@ -264,9 +266,18 @@ class Playlist:
     try: 
       logo = props["l"]
     except:
-      #convert cyrilic names to latin
-      name = props["name"].replace(" ", "").replace("(", "").replace(")", "").replace("&", "").replace("+", "plus").replace("-", "minus").replace("%","").replace("/","").replace("!","").replace(":","")
-      logo = name.lower()
+      name = re.sub(r'[\(\)&%/\!\:\.\s\'\*]*', '', props["name"].decode("utf-8"))
+      # replace delayed channel identificators i.e. +1 or +12
+      name = re.sub(r'\+\d+', '', name)
+      logo = name.replace("LQ","").replace("+", "plus").replace("-", "minus").lower()
+      try:
+        # translate cyrilic chars to latin
+        symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", 
+                 u"abvgdeejziiklmnoprstufhzcssiyyeuaABVGDEEJZIIKLMNOPRSTUFHZCSS_Y_EUA")
+        tr = dict( [ (ord(a), ord(b)) for (a, b) in zip(*symbols) ] )
+        logo = logo.translate(tr)     
+      except:
+        self.log("Translation of logo %s failed" % logo)
     if not logo.startswith("http"):
       logo = url % logo
     self.log("Logo for channel '%s' set to '%s'" % (props["name"], logo))
@@ -356,6 +367,8 @@ class Playlist:
     '''
     self.progress(2, "Downloading mapping file")
     try:
+      if os.environ.get('PVRDEBUG'):
+        raise Exception('Debug mode enabled. Load local map')
       url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       self.log("Downloading streams map from: %s " % url)
