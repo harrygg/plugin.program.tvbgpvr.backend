@@ -180,3 +180,18 @@ if settings.firstrun:
   settings.firstrun = False
   
 __update__('operation', 'start')
+
+class Quality:
+  HD = "HD"
+  SD = "SD"
+  LQ = "LQ"
+  UN = "UNKNOWN"
+
+class PlaylistType:
+  KODIPVR = 0
+  PLAIN   = 1
+  NAMES   = 2
+  LOCAL   = 3
+
+M3U_START_MARKER = "#EXTM3U"
+M3U_INFO_MARKER  = "#EXTINF"

@@ -25,10 +25,8 @@ if not scheduled_run or settings.debug:
 try:
   # Initialize the playlsit object
   pl = Playlist(location=get_location(),
-                log=log, 
                 user_agent=user_agent, 
                 progress=progress_bar,
-                groups_from_progider=settings.groups_from_progider,
                 temp_folder=profile_dir,
                 mapping_file=mapping_file)
   
@@ -36,7 +34,7 @@ try:
     notify_error(translate(32000))
   else:
     # Reorder playlist as per the order in the template file
-    pl.reorder(template_file = get_template_file())
+    pl.reorder(template_file=get_template_file())
 
     ### Hide disabled channel groups
     for group in get_disabled_groups():
