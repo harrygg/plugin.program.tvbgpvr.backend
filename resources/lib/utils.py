@@ -114,6 +114,8 @@ def get_disabled_groups():
     disabled_groups.append('Азиатски') 
   if settings.hide_greek:
     disabled_groups.append('Гръцки') 
+  if settings.hide_roman:
+    disabled_groups.append('Ръмънски') 
   if settings.hide_others:
     disabled_groups.append('Други')
   if settings.hide_information_pr:
@@ -139,7 +141,11 @@ def get_disabled_groups():
   if settings.hide_free_pr:
     disabled_groups.append('free web tv')    
   if settings.hide_culture_pr:
-    disabled_groups.append('culture')  
+    disabled_groups.append('culture')
+  if settings.hide_greek_pr:
+    disabled_groups.append('greek') 
+  if settings.hide_roman_pr:
+    disabled_groups.append('romanian') 
     
   return disabled_groups
   

@@ -60,11 +60,14 @@ class Stream:
 
   
   def __get_stream_properties(self):
-    try: self.__props = self.streams_map[self.name.decode("utf-8")]
+    try: 
+      self.__props = self.streams_map[self.name.decode("utf-8")]
+      log("Found map entry for channel %s" % self.name)
     except:
       if self.quality != Quality.SD:
-        log("Stream name '%s' not found. Searching for '%s'" % (self.name, self.base_name))
+        log("Map entry for channel '%s' not found. Searching for '%s'" % (self.name, self.base_name))
         self.__props = self.streams_map.get(self.base_name.decode("utf-8"), {})
+        log("Found map entry for channel %s" % self.base_name)
   
   
   def __get_group(self):
@@ -84,14 +87,18 @@ class Stream:
         group = self.groups_map["mv"]
       elif "music" in lname:
         group = self.groups_map["mu"]
-      elif "xx" in lname:
+      elif "XX" in self.base_name:
         group = self.groups_map["xx"]
+      elif "укр" in lname:
+        group = self.groups_map["sr"]
       elif "pink" in lname:
         group = self.groups_map["sr"]
       elif "nl" in lname:
         group = self.groups_map["nl"]
-      elif "rai" in lname:
-        group = self.groups_map["it"]
+      elif "RAI" in self.base_name:
+        group = self.groups_map["it"]      
+      elif "TVR" in self.base_name or "RO" in self.base_name:
+        group = self.groups_map["ro"]
       else:
         group = self.groups_map["ot"]
 
@@ -169,10 +176,12 @@ class Stream:
     "ki": "Детски",
     "it": "Италиански",
     "tr": "Турски",
+    "ru": "Руски",
     "fr": "Френски",
     "nl": "Холандски",
     "xx": "Възрастни",
     "gr": "Гръцки",
     "ot": "Други",
-    "sr": "Сръбски"
+    "sr": "Сръбски",
+    "ro": "Румънски"
   }

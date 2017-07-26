@@ -52,6 +52,9 @@
       <setting label="For adults" type="bool" id="hide_xxx_pr" default="false" visible="eq(-32,true)" />
       <setting label="Free web tv" type="bool" id="hide_free_pr" default="false" visible="eq(-33,true)" />
       <setting label="Culture" type="bool" id="hide_culture_pr" default="false" visible="eq(-34,true)" />
+      <setting label="Romanian" type="bool" id="hide_roman_pr" default="false" visible="eq(-35,true)" />
+      <setting label="Greek" type="bool" id="hide_greek_pr" default="false" visible="eq(-36,true)" />
+      <!-- Go back  -->
     </category>
     <category label="Други">
       <setting type="sep"/>

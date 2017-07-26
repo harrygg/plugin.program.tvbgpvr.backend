@@ -241,7 +241,7 @@ class Playlist:
     self.__progress(2, "Downloading mapping file")
     try:
       if os.environ.get('PVRDEBUG'):
-        raise Exception('Debug mode enabled. Load local map')
+        raise Exception('Debug mode enabled')
       url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       log("Downloading streams map from: %s " % url)
