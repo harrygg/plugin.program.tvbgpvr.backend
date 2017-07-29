@@ -15,7 +15,7 @@
     "bTV Lady":{"g":"mv"},
     "BTV Lady LQ":{"id":"bTV Lady", "g":"mv"},
     "RING BG":{"g":"st"},
-    "RING LQ":{"id":"RING LQ", "g":"st"},
+    "RING LQ":{"id":"RING BG", "g":"st"},
     "Nova":{"g":"bg"},
     "NOVAsport LQ":{"id":"Nova Sport", "g":"bg"},
     "KinoNova":{"g":"mv"},
@@ -656,5 +656,5 @@
     "Nova +48":{"g":"bg"}
   },
   "revision":"1",
-  "date":"20170729"
+  "date":"20170730"
 }
