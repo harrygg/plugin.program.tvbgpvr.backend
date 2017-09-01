@@ -207,7 +207,7 @@
     "CNBC":{"g":"nw"},
     "France 24":{"g":"nw"},
     "Al Jazeera Eng":{"id":"Aljazeera English", "g":"nw"},
-    "Aljazeera English HD":{"g":"nw"},
+    "Aljazeera English HD":{"id":"Aljazeera English","g":"nw"},
     "Al Jazeera Balkans":{"g":"nw"},
     "CCTV 4":{"g":"nw"},
     "CCTV News":{"g":"nw"},
