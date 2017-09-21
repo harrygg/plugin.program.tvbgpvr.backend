@@ -290,10 +290,10 @@
     "Fen Folk":{"g":"mu"},
     "DSTV":{"g":"mu"},
     "Фолклор ТВ":{"id":"Фолклор", "g":"mu"},
+    "Тянков ТВ":{"g":"mu","l":"tyankovtv"},
     "Тянков HD":{"id":"Тянков ТВ", "g":"mu"},
     "Тянков Мюзик":{"g":"mu"},
-    "Тянков ТВ":{"g":"mu","l":"tyankovtv"},
-    "Tiankov Music":{"id":"TiankovMusic", "g":"mu"},  
+    "Tiankov Music":{"id":"Тянков Мюзик", "g":"mu"},  
     "Salsa+":{"g":"mu"},
     "DM Sat":{"g":"mu"},
     "DM SAT LQ":{"id":"DM Sat", "g":"mu"},
@@ -657,5 +657,5 @@
     "Nova +48":{"g":"bg"}
   },
   "revision":"1",
-  "date":"20170915"
+  "date":"20170921"
 }
