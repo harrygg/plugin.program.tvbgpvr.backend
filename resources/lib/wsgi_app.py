@@ -60,7 +60,7 @@ def get_stream(name):
     open(session, "w").close()
     log("get_stream() ended. Session created!")
     return HTTPResponse(body, 
-                      status = 200, 
+                      status = 200,
                       **headers)
   
   clear_session()
@@ -73,15 +73,13 @@ def get_stream(name):
     
     with open(pl_cache) as file:
       for line in file:
-        if found and line.rstrip():
-          location = line
-          matches = re.compile("(\|.*)").findall(location)
-          if len(matches):
-            location = location.replace(matches[0], "")
+        if line.startswith("#EXTINF") and line.rstrip().endswith(name):
+          found = True
+          continue
+        if found and line.rstrip(): #if there is a channel match, find the stream path
+          location = re.sub("(\|.*)", "", line)  #strip any user appended arguments after
           log("%s stream found: %s" % (name, location))
           break
-        if line.startswith("#EXTINF") and name in line:
-          found = True
     
     if not found:
       notify_error(translate(32008) % name)

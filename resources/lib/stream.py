@@ -132,7 +132,7 @@ class Stream:
         log("Translation of logo %s failed" % logo)
         
     if not logo.startswith("http"):
-      logo = url % logo
+      logo = url % logo.lower()
     log("Logo for channel '%s' set to '%s'" % (self.name, logo))
     
     return logo  
