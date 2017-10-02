@@ -134,6 +134,7 @@
     "Fast and Fun":{"g":"st"},
     "Supper Tennis":{"g":"st"},
     "Racing UK":{"g":"st"},
+    "Sky Folk":{"g":"st", "n":"Mtel Sport 1","id":"Mtel Sport 1"},
     "LIG TV":{"g":"st", "n":"Bein Sports 1 (tr)","id":"Bein Sports 1 (tr)"},
     "LIG TV 2":{"g":"st", "n":"Bein Sports 2 (tr)","id":"Bein Sports 2 (tr)"},
     "LIG TV 3":{"g":"st", "n":"Bein Sports 3 (tr)","id":"Bein Sports 3 (tr)"},
@@ -155,6 +156,7 @@
     "Матч! Футбол 2":{"g":"st"},
     "Матч! Футбол 3":{"g":"st"},
     "Наш Футбол":{"g":"st"},
+    "Тест: Наш Футбол": {"id":"Наш Футбол", "g":"st"}, 
     "Телеканал КХЛ":{"g":"st"},
     "Конный Мир":{"g":"st"},
     "Viasat Golf":{"g":"st"},
@@ -288,10 +290,10 @@
     "Fen Folk":{"g":"mu"},
     "DSTV":{"g":"mu"},
     "Фолклор ТВ":{"id":"Фолклор", "g":"mu"},
+    "Тянков ТВ":{"g":"mu","l":"tyankovtv"},
     "Тянков HD":{"id":"Тянков ТВ", "g":"mu"},
     "Тянков Мюзик":{"g":"mu"},
-    "Тянков ТВ":{"g":"mu","l":"tyankovtv"},
-    "Tiankov Music":{"id":"TiankovMusic", "g":"mu"},  
+    "Tiankov Music":{"id":"Тянков Мюзик", "g":"mu"},  
     "Salsa+":{"g":"mu"},
     "DM Sat":{"g":"mu"},
     "DM SAT LQ":{"id":"DM Sat", "g":"mu"},
@@ -491,7 +493,7 @@
     "France 24 FR":{"g":"fr"},
     "CCTV French":{"g":"fr"},
     "AB3":{"g":"fr"},
-    "Toute L'histoire":{"g":"fr"},
+    "Toute L'histoire":{"id":"Toute L histoire", "g":"fr"},
     "RTL 9 HD":{"id":"RTL9 (Fr)", "g":"fr"},
     "RTL9 (Fr)":{"id":"RTL9 (Fr)", "g":"fr"},
     "BFM":{"g":"fr"},
@@ -655,5 +657,5 @@
     "Nova +48":{"g":"bg"}
   },
   "revision":"1",
-  "date":"20170730"
+  "date":"20170921"
 }
