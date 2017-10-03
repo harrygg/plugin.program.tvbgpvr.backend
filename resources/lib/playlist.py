@@ -4,6 +4,7 @@ import re
 import sys
 import json
 import requests
+import cPickle
 from stream import *
 from utils import *
 
@@ -62,6 +63,7 @@ class Playlist:
     
     if ret:
       self.__parse()
+      
     log("__load() ended")
 
   def __download(self):
@@ -140,21 +142,25 @@ class Playlist:
     self.__progress(0, "Parsing playlist")
     with open(self.location, "r") as file_content:
       for i, line in enumerate(file_content):
-        if self.size > 0: 
-          # if self.size is > 0 we have counted the lines
+        if self.size > 0: # if true, we have counted the lines
           percent = int(round(i + 1 / float(self.size) * 100))
           self.__progress(percent, "Parsing playlist")
         
         if not line.startswith(M3U_START_MARKER):
-          if line.rstrip() and line.startswith(M3U_INFO_MARKER):
-            stream = Stream(line.rstrip(), self.streams_map)
+          line = line.rstrip()
+          if line and line.startswith(M3U_INFO_MARKER):
+            stream = Stream(line, self.streams_map)
           else:
             if not stream:
               continue
-            stream.url = line.rstrip()
+            stream.url = line
             self.streams.append(stream)
             
             stream = None #reset
+    # serialize streams
+    cPickle.dump(self.streams, open(self.cache_file + "_streams", "wb"))
+    log("Playlist streams successfully serialized!")
+    #cPickle.dump(self, open(self.cache_file + "_playlist", "wb"))
     
   def disable_group(self, group_name):
     self.disabled_groups.append(group_name)
@@ -206,16 +212,18 @@ class Playlist:
           i += 1
       return i
 
-  def to_string(self):
+  def to_string(self, type):
     ''' 
       Deserializes the current streams into m3u formatted strings
     '''
     ordered   = ''
     unordered = ''
+    if not type:
+      type = self.type
     
     for stream in self.streams:
       if stream.order < 9999:
-        ordered += stream.to_string(self.type)
+        ordered += stream.to_string(type)
       else:
         if stream.group in self.disabled_groups:
           #log('Excluding stream "%s" due to disabled group %s' % (stream.name, stream.group))
@@ -226,14 +234,15 @@ class Playlist:
         if not self.include_radios and stream.is_radio:
           #log('Excluding stream "%s" due to disabled radios' % stream.name)
           continue
-        unordered += stream.to_string(self.type)
+        unordered += stream.to_string(type)
     
     buffer = ordered + unordered
-    if self.type is not PlaylistType.NAMES:
+    if type is not PlaylistType.NAMES and type is not PlaylistType.JSON:
       buffer = "%s\n%s" % (M3U_START_MARKER, buffer)
 
     return buffer.encode("utf-8", "replace")
-
+    
+    
   def __load_map(self):
     '''
     Downloads mapping file. If downloads fails loads the local file.
@@ -272,17 +281,33 @@ class Playlist:
     '''
     
     path = kwargs.get('path')
-    self.type = kwargs.get('type', self.type)
+    type = kwargs.get('type', self.type)
     
     # If no path is provided overwite current file
     file_path = path if path else self.cache_file
       
     try:
       with open(file_path, 'w') as file:
-        log("Saving channels in %s " % (file_path))
-        file.write(self.to_string())
+        log("Saving playlist in %s " % (file_path))
+        file.write(self.to_string(type))
       return True
     
     except Exception, er:
       log(er, 4)
       return False
+
+      
+  #@staticmethod
+  # def get_stream_url(name):
+    # """
+    # Reads stream list from cache and returns url of the selected stream name
+    # """
+    # try:
+      # streams = cPickle.loads(pl_cache + "_streams")
+      # log("deserialized %s streams from file " % (len(streams), pl_cache + "_streams"))
+      # for stream in streams:
+        # if stream.name == name:
+          # log("Found url for stream %s" % name)
+          # return stream.url
+    # except:
+      # return None

@@ -56,37 +56,44 @@ def get_stream(name):
   ### Kodi 17 sends 2 GET requests for a resource which may cause 
   ### stream invalidation on some middleware servers. If this is 
   ### the first request return a dummy response and handle the 2nd
-  if VERSION > 16 and not os.path.isfile(session):
-    open(session, "w").close()
-    log("get_stream() ended. Session created!")
+  #if VERSION > 16 and not os.path.isfile(session):
+  if VERSION > 16 and not settings.first_request:
+    settings.first_request = True
+    log("get_stream() ended. First request handled!")
     return HTTPResponse(body, 
                       status = 200,
                       **headers)
   
-  clear_session()
-
   ### If this is the 2nd request by the player
   ### redirect it to the original stream  
+  
+  settings.first_request = False
+
   try:  
-    name = unquote(name)
-    found = False
-    
-    with open(pl_cache) as file:
-      for line in file:
-        if line.startswith("#EXTINF") and line.rstrip().endswith(name):
-          found = True
-          continue
-        if found and line.rstrip(): #if there is a channel match, find the stream path
-          location = re.sub("(\|.*)", "", line)  #strip any user appended arguments after
-          log("%s stream found: %s" % (name, location))
-          break
-    
-    if not found:
+    stream_name = unquote(name)
+    stream = get_stream_from_cache(stream_name)
+    if not stream:
       notify_error(translate(32008) % name)
-      return HTTPResponse(body, 
-                          status = 404)
+      return HTTPResponse(body, status = 404)
+    else:
+      location = stream.url
+    
+    # found = False
+    
+    # with open(pl_cache) as file:
+      # for line in file:
+        # if line.startswith("#EXTINF") and line.rstrip().endswith(name):
+          # found = True
+          # continue
+        # if found and line.rstrip(): #if there is a channel match, find the stream path
+          # location = re.sub("(\|.*)", "", line)  #strip any user appended arguments after
+          # log("%s stream found: %s" % (name, location))
+          # break
+    
+
 
     if __DEBUG__:
+      log("url found: %s" % location)
       return HTTPResponse(location,
                           status = 200)
                       

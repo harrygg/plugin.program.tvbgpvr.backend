@@ -3,6 +3,7 @@ import os
 import sys
 import xbmc
 import xbmcaddon
+import cPickle
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
@@ -61,7 +62,7 @@ def __update__(action, location, crash=None):
     log(er)
 
 def clear_session():
-  try: 
+  try:
     os.remove(session)
     log('Session destroyed!')
   except:
@@ -154,6 +155,20 @@ def get_location():
   if os.environ.get('PVRDEBUG'):
     location = 'http://127.0.0.1/tv/playlist.m3u'
   return location
+  
+def get_stream_from_cache(name):
+  """
+  Reads stream list from cache and returns url of the selected stream name
+  """
+  #try:
+  streams = cPickle.load(open(streams_cache))
+  log("deserialized %s streams from file %s" % (len(streams), streams_cache))
+  for stream in streams:
+    if stream.name == name:
+      log("Found url for stream %s" % name)
+      return stream
+  #except:
+  # return None
    
 ## Initialize the addon
 id            = 'plugin.program.tvbgpvr.backend'
@@ -164,6 +179,7 @@ pl_name       = 'playlist.m3u'
 profile_dir   = xbmc.translatePath(this.getAddonInfo('profile')).decode('utf-8')
 pl_path       = os.path.join(profile_dir, pl_name)
 pl_cache      = os.path.join(profile_dir, ".cache")
+streams_cache = os.path.join(profile_dir, ".cache_streams")
 session       = os.path.join(profile_dir, '.session')
 __version__   = xbmc.getInfoLabel('System.BuildVersion')
 VERSION       = int(__version__[0:2])
@@ -198,6 +214,7 @@ class PlaylistType:
   PLAIN   = 1
   NAMES   = 2
   LOCAL   = 3
+  JSON    = 4
 
 M3U_START_MARKER = "#EXTM3U"
 M3U_INFO_MARKER  = "#EXTINF"

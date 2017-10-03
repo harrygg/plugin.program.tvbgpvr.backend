@@ -12,7 +12,7 @@ class Stream:
     Class definition for m3u stream entries
   '''
   name      = None
-  base_name = None
+  base_name = None # Name without Quality attribute
   id        = None
   url       = None
   logo      = None
@@ -23,7 +23,6 @@ class Stream:
   order     = 9999
   quality   = Quality.SD
   __props   = {}
-
   
   def __init__(self, line, streams_map):
     
@@ -143,6 +142,9 @@ class Stream:
     if type is PlaylistType.NAMES:
       return '%s\n' % self.name
     
+    if type is PlaylistType.JSON:
+      return '%s' % self.to_json()
+      
     buffer = '%s:-1' % M3U_INFO_MARKER
     
     if type is not PlaylistType.PLAIN:
@@ -161,7 +163,14 @@ class Stream:
     buffer += '%s\n' % self.url
 
     return buffer
+  
+  
+  def to_json():
+    '''
+    '''
+    return '{"name":"%s", "id":"%", "url": "%s", "logo":"%s", "group": "%s", "shift": "%s", "is_radio": %s, "disabled": %s, "order": %s, "quality": "%s"}' % (name, id, url, logo, group, shift, is_radio, disabled, order, quality)
 
+    
   groups_map = {
     "bg": "Български",
     "en": "Английски",
