@@ -61,13 +61,6 @@ def __update__(action, location, crash=None):
   except Exception, er:
     log(er)
 
-def clear_session():
-  try:
-    os.remove(session)
-    log('Session destroyed!')
-  except:
-    pass
-
 def get_template_file():
   template_file = settings.template_file
   if not os.path.isfile(template_file):
@@ -156,19 +149,18 @@ def get_location():
     location = 'http://127.0.0.1/tv/playlist.m3u'
   return location
   
-def get_stream_from_cache(name):
+def get_stream_url(name):
   """
   Reads stream list from cache and returns url of the selected stream name
   """
-  #try:
-  streams = cPickle.load(open(streams_cache))
-  log("deserialized %s streams from file %s" % (len(streams), streams_cache))
-  for stream in streams:
-    if stream.name == name:
-      log("Found url for stream %s" % name)
-      return stream
-  #except:
-  # return None
+  try:
+    # deserialize streams
+    streams = cPickle.load(open(pl_streams))
+    log("deserialized %s streams from file %s" % (len(streams), pl_streams))
+    return streams.get(name.decode("utf-8"))
+  except Exception as er:
+    log(er)
+    return None
    
 ## Initialize the addon
 id            = 'plugin.program.tvbgpvr.backend'
@@ -179,8 +171,7 @@ pl_name       = 'playlist.m3u'
 profile_dir   = xbmc.translatePath(this.getAddonInfo('profile')).decode('utf-8')
 pl_path       = os.path.join(profile_dir, pl_name)
 pl_cache      = os.path.join(profile_dir, ".cache")
-streams_cache = os.path.join(profile_dir, ".cache_streams")
-session       = os.path.join(profile_dir, '.session')
+pl_streams    = os.path.join(profile_dir, ".streams")
 __version__   = xbmc.getInfoLabel('System.BuildVersion')
 VERSION       = int(__version__[0:2])
 user_agent    = 'Kodi %s' % __version__
@@ -195,6 +186,11 @@ GET           = 'GET'
 HEAD          = 'HEAD'
 NEWLINE       = '\n'
 STREAM_URL    = 'http://127.0.0.1:%s/tvbgpvr.backend/stream/%s'
+HD            = 'HD'
+SD            = 'SD'
+LQ            = 'LQ'
+START_MARKER  = "#EXTM3U"
+INFO_MARKER   = "#EXTINF"
 
 ### Addon starts
 if settings.firstrun:
@@ -202,19 +198,10 @@ if settings.firstrun:
   settings.firstrun = False
   
 __update__('operation', 'start')
-
-class Quality:
-  HD = "HD"
-  SD = "SD"
-  LQ = "LQ"
-  UN = "UNKNOWN"
-
+  
 class PlaylistType:
   KODIPVR = 0
   PLAIN   = 1
   NAMES   = 2
-  LOCAL   = 3
-  JSON    = 4
-
-M3U_START_MARKER = "#EXTM3U"
-M3U_INFO_MARKER  = "#EXTINF"
+  JSON    = 3
+  LOCAL   = 4

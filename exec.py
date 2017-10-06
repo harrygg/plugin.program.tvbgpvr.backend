@@ -6,12 +6,12 @@ import xbmcgui
 from resources.lib.utils import *
 from resources.lib.playlist import *
 
-# #append_pydev_remote_debugger
-# if os.environ.get('PVRDEBUG'):
-  # sys.path.append(os.environ['PYSRC'])
-  # import pydevd
-  # pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
-# #end_append_pydev_remote_debugger	
+#append_pydev_remote_debugger
+if os.environ.get('PVRDEBUG') and False:
+  sys.path.append(os.environ['PYSRC'])
+  import pydevd
+  pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
+#end_append_pydev_remote_debugger	
 
 log("Started on %s" % user_agent)
 if scheduled_run:
@@ -33,32 +33,32 @@ try:
   if pl.count() == 0:
     notify_error(translate(32000))
   else:
+    ### Hide disabled channel groups
+    pl.disable_groups(get_disabled_groups())    
+    
+    ### If there is a preferred quality for channels with multi streams, 
+    ### remove all unpreferred streams
+    if (settings.preferred_quality != "Всички"):
+      pl.disable_streams(settings.preferred_quality)
+
     # Reorder playlist as per the order in the template file
     pl.reorder(template_file=get_template_file())
+    
+    ### Replace stream URLs with static ones
+    pl.set_static_stream_urls(STREAM_URL, settings.port)
 
-    ### Hide disabled channel groups
-    for group in get_disabled_groups():
-      pl.disable_group(group)
-    
-    ### Disable low quality channels
-    if settings.hide_lq:
-      pl.disable_quality(Quality.LQ)
-    
-    ### Save original playlist to disk, use it for resolving stream urls
-    if not pl.save():
-      notify_error(translate(32001))
-      
     ### Export channel names from original playlist
     if settings.export_names:
       names_file_path = os.path.join(settings.export_to_folder, "names.txt")
       pl.save(path=names_file_path, 
               type=PlaylistType.NAMES)
-    
-    ### Create the playlist with static channels
-    for stream in pl.streams:
-      name = urllib.quote(stream.name)
-      stream.url = STREAM_URL % (settings.port, name)
-    
+
+    ### Export channel names & ids from original playlist
+    ### Needed only for the EPG generation. Users can disable it!!!
+    if settings.export_names:
+      names_file_path = os.path.join(settings.export_to_folder, "channels.json")
+      pl.save(path=names_file_path, type=PlaylistType.JSON)
+              
     ### Write playlist to disk
     if not pl.save(path=pl_path):
       notify_error(translate(32001))

@@ -15,10 +15,8 @@
     <category label="Подредба">
       <setting label="Път до шаблон с подредба на канали" type="file"  id="template_file" default="resources/order.txt" />
       <setting label="Използвай имена на групи от доставчик" type="bool"   id="groups_from_progider" default="false"/>
-      <!-- <setting label="Добави каналите, които липсват в шаблона, но са в плейлистата" type="bool" id="add_missing" default="false"/> -->
-      <!-- <setting label="При налични HD и SD версия на канал, добави:"   id="prefer_stream"  default="0" values="И двете|HD|SD" type="enum" />  -->
+      <setting label="При наличие на няколко версии на канал, предпочитай:"  id="preferred_quality" type="labelenum" lvalues="Всички|HD|SD|LQ"  default="0" />
       <setting label="Премахни канали от следните категории:" type="lsep"/>
-      <setting label="Ниско качество (Low bandwidth)" type="bool" id="hide_lq" default="true"/>
       <setting label="Турски" type="bool" id="hide_turkish" default="false" visible="eq(-3,false)" />
       <setting label="Руски" type="bool" id="hide_russian" default="false" visible="eq(-4,false)" />
       <setting label="Сръбски" type="bool" id="hide_serbian" default="false" visible="eq(-5,false)" />
@@ -39,7 +37,6 @@
       <setting label="Български" type="bool" id="hide_bulgarian" default="false" visible="eq(-20,false)" />
       <setting label="Азиатски" type="bool" id="hide_asia" default="false" visible="eq(-21,false)" />
       <setting label="Други" type="bool" id="hide_others" default="false" visible="eq(-22,false)" />
-
       <setting label="Information" type="bool" id="hide_information_pr" default="false" visible="eq(-23,true)" />
       <setting label="Cinema" type="bool" id="hide_movies_pr" default="false" visible="eq(-24,true)" />
       <setting label="News" type="bool" id="hide_news_pr" default="false" visible="eq(-25,true)" />

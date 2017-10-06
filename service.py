@@ -1,7 +1,7 @@
 from xbmc import executebuiltin, Monitor
 from resources.lib.server import create_server
 from resources.lib.wsgi_app import *
-from resources.lib.utils import notify, clear_session, RUNSCRIPT
+from resources.lib.utils import *
 
 executebuiltin(RUNSCRIPT)
 monitor = Monitor()
@@ -17,5 +17,5 @@ while not monitor.abortRequested():
     starting = False
 
 httpd.socket.close()
-clear_session()
+settings.first_request = False
 log(translate(32003))

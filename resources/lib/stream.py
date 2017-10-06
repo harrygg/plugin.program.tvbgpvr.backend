@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import re
 import sys
+import json
 import string
 from utils import *
 
@@ -12,7 +13,6 @@ class Stream:
     Class definition for m3u stream entries
   '''
   name      = None
-  base_name = None # Name without Quality attribute
   id        = None
   url       = None
   logo      = None
@@ -21,23 +21,20 @@ class Stream:
   is_radio  = False
   disabled  = False
   order     = 9999
-  quality   = Quality.SD
+  quality   = SD
   __props   = {}
+  
   
   def __init__(self, line, streams_map):
     
     self.line = line
     self.name = re.compile(',(?:\d+\.)*\s*(.*)').findall(self.line)[0]
     self.streams_map = streams_map
-    self.base_name = self.name
     
-    if Quality.HD in self.name:
-      self.quality = Quality.HD
-      self.base_name = self.base_name.replace(" " + Quality.HD, "").replace(Quality.HD, "").rstrip()
-    if Quality.LQ in self.name:
-      self.quality = Quality.LQ
-      self.base_name = self.base_name.replace(Quality.LQ, "").rstrip()
-
+    self.quality = self.__get_quality_from_string(self.name)
+    self.id = self.name.replace(" %s" % self.quality, "").replace(str(self.quality), "").rstrip()
+    
+    log("Quality for stream '%s' set to %s" % (self.name, self.quality))
     # Get stream properties from the map of streams
     self.__get_stream_properties()
     
@@ -48,7 +45,7 @@ class Stream:
     
     # Set ID
     try: self.id = self.__props["id"]
-    except: self.id = self.base_name
+    except: pass
     log("Stream ID for channel '%s' set to '%s'" % (self.name, self.id))  
     
     self.group = self.__get_group()
@@ -61,12 +58,22 @@ class Stream:
   def __get_stream_properties(self):
     try: 
       self.__props = self.streams_map[self.name.decode("utf-8")]
-      log("Found map entry for channel %s" % self.name)
+      #log("Found map entry for channel %s" % self.name)
     except:
-      if self.quality != Quality.SD:
-        log("Map entry for channel '%s' not found. Searching for '%s'" % (self.name, self.base_name))
-        self.__props = self.streams_map.get(self.base_name.decode("utf-8"), {})
-        log("Found map entry for channel %s" % self.base_name)
+      if self.quality != SD:
+        #log("Map entry for channel '%s' not found. Searching for '%s'" % (self.name, self.id))
+        self.__props = self.streams_map.get(self.id.decode("utf-8"), {})
+        #log("Found map entry for channel %s" % self.id)
+  
+  
+  def __get_quality_from_string(self, string):
+    if LQ in string:
+      self.quality = LQ
+    elif SD in string:
+      self.quality = SD
+    elif HD in string:
+      self.quality = HD
+    return self.quality
   
   
   def __get_group(self):
@@ -79,14 +86,14 @@ class Stream:
         group = self.groups_map[group_id]
     except:
       ## Try go guess channel group from channel name
-      lname = self.base_name.lower()
+      lname = self.name.lower()
       if "spor" in lname:
         group = self.groups_map["st"]
       elif "movie" in lname or "film" in lname or "cinema" in lname:
         group = self.groups_map["mv"]
       elif "music" in lname:
         group = self.groups_map["mu"]
-      elif "XX" in self.base_name:
+      elif "XX" in self.name:
         group = self.groups_map["xx"]
       elif "укр" in lname:
         group = self.groups_map["sr"]
@@ -94,9 +101,9 @@ class Stream:
         group = self.groups_map["sr"]
       elif "nl" in lname:
         group = self.groups_map["nl"]
-      elif "RAI" in self.base_name:
+      elif "RAI" in self.name:
         group = self.groups_map["it"]      
-      elif "TVR" in self.base_name or "RO" in self.base_name:
+      elif "TVR" in self.name or "RO" in self.name:
         group = self.groups_map["ro"]
       else:
         group = self.groups_map["ot"]
@@ -120,7 +127,7 @@ class Stream:
       name = re.sub(r'[\(\)&%/\!\:\.\s\'\*\,]*', '', self.name.decode("utf-8"))
       # replace delayed channel identificators i.e. +1 or +12
       name = re.sub(r'\+\d+', '', name)
-      logo = name.replace(Quality.LQ,"").replace("+", "plus").replace("-", "minus").lower()
+      logo = name.replace(LQ, "").replace("+", "plus").replace("-", "minus").lower()
       try:
         # translate cyrilic chars to latin
         symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", 
@@ -137,7 +144,7 @@ class Stream:
     return logo  
     
     
-  def to_string(self, type):
+  def to_string(self, type=PlaylistType.JSON):
   
     if type is PlaylistType.NAMES:
       return '%s\n' % self.name
@@ -145,7 +152,7 @@ class Stream:
     if type is PlaylistType.JSON:
       return '%s' % self.to_json()
       
-    buffer = '%s:-1' % M3U_INFO_MARKER
+    buffer = '%s:-1' % INFO_MARKER
     
     if type is not PlaylistType.PLAIN:
       if self.is_radio:
@@ -165,12 +172,13 @@ class Stream:
     return buffer
   
   
-  def to_json():
+  def to_json(self):
     '''
+      Outputs the stream object into a JSON formatted string
     '''
-    return '{"name":"%s", "id":"%", "url": "%s", "logo":"%s", "group": "%s", "shift": "%s", "is_radio": %s, "disabled": %s, "order": %s, "quality": "%s"}' % (name, id, url, logo, group, shift, is_radio, disabled, order, quality)
-
-    
+    #return json.dumps({"name": self.name, "id": self.id, "url": self.url, "logo": self.logo, "group": self.group, "is_radio": self.is_radio, "shift": self.shift, "order": self.order, "quality": self.quality}, ensure_ascii=False).encode('utf8')
+    return json.dumps({"name": self.name, "id": self.id}, ensure_ascii=False).encode('utf8')
+  
   groups_map = {
     "bg": "Български",
     "en": "Английски",
@@ -194,3 +202,15 @@ class Stream:
     "sr": "Сръбски",
     "ro": "Румънски"
   }
+
+class Channel:
+  
+  def __init__(self, name = None):
+    self.streams = []
+    self.name = name
+  
+  def has_quality(self, quality):
+    for stream in self.streams:
+      if stream.quality == quality:
+        return True
+    return False    

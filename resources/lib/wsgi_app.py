@@ -66,34 +66,20 @@ def get_stream(name):
   
   ### If this is the 2nd request by the player
   ### redirect it to the original stream  
-  
   settings.first_request = False
 
   try:  
     stream_name = unquote(name)
-    stream = get_stream_from_cache(stream_name)
-    if not stream:
+    location = get_stream_url(stream_name)
+    
+    if not location:
       notify_error(translate(32008) % name)
-      return HTTPResponse(body, status = 404)
-    else:
-      location = stream.url
-    
-    # found = False
-    
-    # with open(pl_cache) as file:
-      # for line in file:
-        # if line.startswith("#EXTINF") and line.rstrip().endswith(name):
-          # found = True
-          # continue
-        # if found and line.rstrip(): #if there is a channel match, find the stream path
-          # location = re.sub("(\|.*)", "", line)  #strip any user appended arguments after
-          # log("%s stream found: %s" % (name, location))
-          # break
-    
-
+      return HTTPResponse(body, 
+                          status = 404)
 
     if __DEBUG__:
       log("url found: %s" % location)
+      notify("Stream found: %s" % location)
       return HTTPResponse(location,
                           status = 200)
                       
