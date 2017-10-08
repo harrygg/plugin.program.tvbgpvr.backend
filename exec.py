@@ -28,17 +28,15 @@ try:
                 user_agent=user_agent, 
                 progress=progress_bar,
                 temp_folder=profile_dir,
+                disabled_groups=get_disabled_groups(),
                 mapping_file=mapping_file)
   
   if pl.count() == 0:
     notify_error(translate(32000))
   else:
-    ### Hide disabled channel groups
-    pl.disable_groups(get_disabled_groups())    
-    
     ### If there is a preferred quality for channels with multi streams, 
     ### remove all unpreferred streams
-    if (settings.preferred_quality != "Всички"):
+    if (settings.preferred_quality != ALL):
       pl.disable_streams(settings.preferred_quality)
 
     # Reorder playlist as per the order in the template file

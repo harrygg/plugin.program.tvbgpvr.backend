@@ -51,6 +51,7 @@
       <setting label="Culture" type="bool" id="hide_culture_pr" default="false" visible="eq(-34,true)" />
       <setting label="Romanian" type="bool" id="hide_roman_pr" default="false" visible="eq(-35,true)" />
       <setting label="Greek" type="bool" id="hide_greek_pr" default="false" visible="eq(-36,true)" />
+      <setting label="Румънски" type="bool" id="hide_roman" default="false" visible="eq(-37,false)" />
       <!-- Go back  -->
     </category>
     <category label="Други">

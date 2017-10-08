@@ -109,7 +109,7 @@ def get_disabled_groups():
   if settings.hide_greek:
     disabled_groups.append('Гръцки') 
   if settings.hide_roman:
-    disabled_groups.append('Ръмънски') 
+    disabled_groups.append('Румънски') 
   if settings.hide_others:
     disabled_groups.append('Други')
   if settings.hide_information_pr:
@@ -140,7 +140,7 @@ def get_disabled_groups():
     disabled_groups.append('greek') 
   if settings.hide_roman_pr:
     disabled_groups.append('romanian') 
-    
+  
   return disabled_groups
   
 def get_location():
@@ -156,7 +156,7 @@ def get_stream_url(name):
   try:
     # deserialize streams
     streams = cPickle.load(open(pl_streams))
-    log("deserialized %s streams from file %s" % (len(streams), pl_streams))
+    log("Deserialized %s streams from file %s" % (len(streams), pl_streams))
     return streams.get(name.decode("utf-8"))
   except Exception as er:
     log(er)
@@ -191,6 +191,7 @@ SD            = 'SD'
 LQ            = 'LQ'
 START_MARKER  = "#EXTM3U"
 INFO_MARKER   = "#EXTINF"
+ALL           = "Всички"
 
 ### Addon starts
 if settings.firstrun:
@@ -200,8 +201,7 @@ if settings.firstrun:
 __update__('operation', 'start')
   
 class PlaylistType:
-  KODIPVR = 0
-  PLAIN   = 1
-  NAMES   = 2
-  JSON    = 3
-  LOCAL   = 4
+  KODIPVR = "KODIPVR"
+  PLAIN   = "PLAIN"
+  NAMES   = "NAMES"
+  JSON    = "JSON"
