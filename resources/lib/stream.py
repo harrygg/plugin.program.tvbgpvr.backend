@@ -32,7 +32,7 @@ class Stream:
     self.streams_map = map["streams"]
     self.groups_map = map["groups"]
     
-    self.quality = self.__get_quality_from_string(self.name)
+    self.quality = self.__get_quality()
     self.id = self.name.replace(" %s" % self.quality, "").replace(str(self.quality), "").rstrip()
     
     log("Quality for stream '%s' set to %s" % (self.name, self.quality))
@@ -67,14 +67,14 @@ class Stream:
         #log("Found map entry for channel %s" % self.id)
   
   
-  def __get_quality_from_string(self, string):
-    if LQ in string:
-      self.quality = LQ
-    elif SD in string:
-      self.quality = SD
-    elif HD in string:
-      self.quality = HD
-    return self.quality
+  def __get_quality(self):
+    if LQ in self.name:
+      return LQ
+    elif SD in self.name:
+      return SD
+    elif HD in self.name:
+      return HD
+    return SD
   
   
   def __get_group(self):

@@ -139,8 +139,7 @@ class Playlist:
     '''
     log("parse() started!")
     stream = None
-    self.__progress(10, "5. Parsing playlist")
-    percent = 0  
+    percent = 10  
     max = 80
     step = round(self.size/max) if self.size > 0 else 16
     with open(self.location, "r") as file_content:
@@ -201,12 +200,10 @@ class Playlist:
         template_file: a template txt file with channel names. Single name on each a row
     '''
     log("reorder() started")
-    self.__progress(90, "Reording playlist")
     self.template_file = kwargs.get('template_file', self.template_file)
     template_order = self.__load_order_template()
-    
-    percent = 0
-    max = 5
+    percent = 95
+    max = 3
     step = round(len(self.streams)/max)
     for i, stream in enumerate(self.streams):
       if i % step == 0: 
@@ -260,7 +257,7 @@ class Playlist:
       Outputs the current streams into different formats
     '''
     log("__to_string() started!")
-    self.__progress(95, "Saving playlist. Type: %s" % type)
+    self.__progress(98, "Saving playlist. Type: %s" % type)
     if not type:
       type = self.type
     
@@ -273,8 +270,10 @@ class Playlist:
       # if i % step == 0: 
         # percent += 1
       # self.__progress(percent, "1. Saving playlist. Type: %s" % type)
+      if self.streams[i].group in self.disabled_groups:
+        self.streams[i].disabled = True
       
-      if not self.streams[i].disabled or self.streams[i].group not in self.disabled_groups or type == PlaylistType.NAMES or type == PlaylistType.JSON:
+      if not self.streams[i].disabled or type == PlaylistType.NAMES or type == PlaylistType.JSON:
         stream_string = self.streams[i].to_string(type)
         enabled_streams += 1
         if type == PlaylistType.JSON: #append comma
@@ -366,14 +365,14 @@ class Playlist:
     _streams = []
     try:
       log("set_preferred_quality() started")
-      log("Selecting streams with preferred quality '%s'" % preferred_quality)
       i = 0
-      percent = 0
-      step = round(len(self.channels) / 100)
+      percent = 90
+      max = 5
+      step = round(len(self.channels) / max)
       for channel_name, channel in self.channels.iteritems():
         if i % step == 0: 
           percent += 1
-        self.__progress(percent, "3. Selecting %s streams for channel %s" % (preferred_quality, channel_name))
+        self.__progress(percent, "Selecting %s streams for channel %s" % (preferred_quality, channel_name))
         i += 1
         __preferred_quality = preferred_quality
         log("Searching for '%s' stream from channel '%s'" % (__preferred_quality, channel_name))
@@ -382,11 +381,10 @@ class Playlist:
           __preferred_quality = HD if __preferred_quality == SD else SD
           log("No %s stream for channel '%s'. Changing quality to %s" % (preferred_quality, channel_name, __preferred_quality))
         # disable streams with unpreferred quality
-        for stream in channel.streams:
-          if stream.quality == __preferred_quality:
+        for quality,stream in channel.streams.iteritems():
+          if quality == __preferred_quality:
             stream.disabled = False
             log("Preferred %s stream found. Adding '%s'" % (stream.quality, stream.name))
-            #log(stream.to_json())
           else:
             ## if it's a channel with a single stream, add it.
             if len(channel.streams) == 1 and not forced_disable:
