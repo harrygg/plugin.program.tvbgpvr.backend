@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import json
 import xbmc
 import xbmcaddon
 import cPickle
@@ -155,7 +156,8 @@ def get_stream_url(name):
   """
   try:
     # deserialize streams
-    streams = cPickle.load(open(pl_streams))
+    # streams = cPickle.load(open(pl_streams))
+    streams = json.load(open(pl_streams))
     log("Deserialized %s streams from file %s" % (len(streams), pl_streams))
     return streams.get(name.decode("utf-8"))
   except Exception as er:

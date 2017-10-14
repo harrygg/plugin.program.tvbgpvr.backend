@@ -52,7 +52,7 @@ def get_stream(name):
   body     = None
   location = None
 
-  log("get_stream() started")
+  log("get_stream() started.")
   ### Kodi 17 sends 2 GET requests for a resource which may cause 
   ### stream invalidation on some middleware servers. If this is 
   ### the first request return a dummy response and handle the 2nd
@@ -78,8 +78,8 @@ def get_stream(name):
                           status = 404)
 
     if __DEBUG__:
-      log("url found: %s" % location)
-      notify("Stream found: %s" % location)
+      notify("URL found for stream %s: %s" % (stream_name, location))
+      log("get_stream() ended!")
       return HTTPResponse(location,
                           status = 200)
                       
@@ -89,7 +89,7 @@ def get_stream(name):
     body = str(er)
     log(str(er), 4)
     
-  log("get_stream() ended")
+  log("get_stream() ended!")
   return HTTPResponse(body, 
                       status = 302, 
                       **headers)

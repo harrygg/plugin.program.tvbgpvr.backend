@@ -25,11 +25,12 @@ class Stream:
   __props   = {}
   
   
-  def __init__(self, line, streams_map):
+  def __init__(self, line, map):
     
     self.line = line
     self.name = re.compile(',(?:\d+\.)*\s*(.*)').findall(self.line)[0]
-    self.streams_map = streams_map
+    self.streams_map = map["streams"]
+    self.groups_map = map["groups"]
     
     self.quality = self.__get_quality_from_string(self.name)
     self.id = self.name.replace(" %s" % self.quality, "").replace(str(self.quality), "").rstrip()
@@ -185,33 +186,9 @@ class Stream:
     '''
     #return json.dumps({"name": self.name, "id": self.id, "url": self.url, "logo": self.logo, "group": self.group, "is_radio": self.is_radio, "shift": self.shift, "order": self.order, "quality": self.quality}, ensure_ascii=False).encode('utf8')
     return json.dumps({"name": self.name, "id": self.id}, ensure_ascii=False).encode('utf8')
-  
-  groups_map = {
-    "bg": "Български",
-    "en": "Английски",
-    "mv": "Филми",
-    "st": "Спортни",
-    "dc": "Документални",
-    "th": "Тематични",
-    "de": "Немски",
-    "as": "Азиатски",
-    "nw": "Новини",
-    "mu": "Музикални",
-    "ki": "Детски",
-    "it": "Италиански",
-    "tr": "Турски",
-    "ru": "Руски",
-    "fr": "Френски",
-    "nl": "Холандски",
-    "xx": "Възрастни",
-    "gr": "Гръцки",
-    "ot": "Други",
-    "sr": "Сръбски",
-    "ro": "Румънски"
-  }
+    
 
 class Channel:
-  
   def __init__(self, name = None):
     self.streams = {} #dict with stream quality as a key
     self.name = name  

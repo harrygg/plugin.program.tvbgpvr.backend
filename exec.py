@@ -7,13 +7,13 @@ from resources.lib.utils import *
 from resources.lib.playlist import *
 
 #append_pydev_remote_debugger
-if os.environ.get('PVRDEBUG') and False:
-  sys.path.append(os.environ['PYSRC'])
-  import pydevd
-  pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
+# if os.environ.get('PVRDEBUG'):
+  # sys.path.append(os.environ['PYSRC'])
+  # import pydevd
+  # pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
 #end_append_pydev_remote_debugger	
 
-log("Started on %s" % user_agent)
+log("Addon running on: %s" % user_agent)
 if scheduled_run:
   log(translate(32004))
   
@@ -37,9 +37,9 @@ try:
     ### If there is a preferred quality for channels with multi streams, 
     ### remove all unpreferred streams
     if (settings.preferred_quality != ALL):
-      pl.disable_streams(settings.preferred_quality)
+      pl.set_preferred_quality(settings.preferred_quality)
 
-    # Reorder playlist as per the order in the template file
+    ### Reorder playlist as per the order in the template file
     pl.reorder(template_file=get_template_file())
     
     ### Replace stream URLs with static ones
@@ -48,12 +48,9 @@ try:
     ### Export channel names from original playlist
     if settings.export_names:
       names_file_path = os.path.join(settings.export_to_folder, "names.txt")
-      pl.save(path=names_file_path, 
-              type=PlaylistType.NAMES)
-
-    ### Export channel names & ids from original playlist
-    ### Needed only for the EPG generation. Users can disable it!!!
-    if settings.export_names:
+      pl.save(path=names_file_path, type=PlaylistType.NAMES)
+      # Export channel names & ids from original playlist
+      # Needed only for the EPG generation. Users can disable it!!!
       names_file_path = os.path.join(settings.export_to_folder, "channels.json")
       pl.save(path=names_file_path, type=PlaylistType.JSON)
               
