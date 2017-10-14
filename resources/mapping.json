@@ -112,7 +112,7 @@
     "Fine Living":{"g":"th"},
     "Fiesta":{"g":"th"},
     "TLC":{"g":"mv"},
-    "CBS Drama":{"g":"mv"},
+    "CBS Drama":{"n":"Sundance TV","g":"mv"},
     "CBS Reality":{"g":"mv"},
     "Comedy Central":{"g":"mv"},
     "Comedy Central HD (es,en)":{"n":"Comedy Central HD (es&en)","id":"Comedy Central","g":"mv","l":"comedycentral"},
@@ -215,8 +215,9 @@
     "Aljazeera English HD":{"id":"Aljazeera English","g":"nw"},
     "Al Jazeera Balkans":{"g":"nw"},
     "CCTV 4":{"g":"nw"},
-    "CCTV News":{"g":"nw"},
+    "CCTV News":{"n":"CGTN","g":"nw"},
     "CCTV 9 Documentary":{"g":"dc"},
+    "CCTV French":{"n":"CGTN Francais","g":"fr"},
     "RT News HD":{"id":"Russia Today", "g":"nw"},
     "Russia Today":{"g":"nw"},
     "RT Spanish":{"g":"nw"},
@@ -493,7 +494,6 @@
     "Animaux":{"g":"fr"},
     "NT1":{"g":"fr"},
     "France 24 FR":{"g":"fr"},
-    "CCTV French":{"g":"fr"},
     "AB3":{"g":"fr"},
     "Toute L'histoire":{"id":"Toute L histoire", "g":"fr"},
     "RTL 9 HD":{"id":"RTL9 (Fr)", "g":"fr"},
@@ -586,7 +586,7 @@
     "SuperOne":{"g":"xx"},
     "French Lover":{"g":"xx"},
     "CentoCento":{"g":"xx"},
-    "XXX 3":{"g":"xx"},
+    "XXX 4":{"n":"SuperOne","g":"xx"},
     "SCT Teleitalia":{"g":"xx"},
     "PinkO TV":{"g":"xx"},
     "SCT Boy & Boy":{"g":"xx"},
@@ -659,5 +659,5 @@
     "Nova +48":{"g":"bg"}
   },
   "revision":"1",
-  "date":"20170921"
+  "date":"20171013"
 }

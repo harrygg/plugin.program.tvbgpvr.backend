@@ -8,12 +8,13 @@ import cPickle
 import requests
 from stream import *
 from utils import *
+from collections import OrderedDict
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
 
 class Playlist:
-  streams = []
+  streams = {}
   channels = {}
   disabled_groups = None
   size = 0
@@ -104,13 +105,7 @@ class Playlist:
       Implementation of iter_lines to include progress bar
     '''
     pending = None
-    i = 0
-    percent = 0
     for chunk in response.iter_content(chunk_size=chunk_size, decode_unicode=True):
-      if i >= chunk_size:
-        percent += 1 
-        self.__progress(percent, 'Parsing server response')
-      i += chunk_size 
       if pending is not None:
         chunk = pending + chunk
       if delimiter:
@@ -141,17 +136,17 @@ class Playlist:
  
   def __parse(self):
     '''
-      Parse any given m3u file line by line
+      Parse m3u file line by line
     '''
     log("parse() started!")
     stream = None
-    self.__progress(0, "Parsing playlist")
+    self.__progress(0, "5. Parsing playlist")
     percent = 0  
-    percentage_step = round(self.size/100) if self.size > 0 else 1
+    step = round(self.size/100) if self.size > 0 else 16
     with open(self.location, "r") as file_content:
       for i, line in enumerate(file_content):
         if self.size > 0: # if true, we have counted the lines
-          if i % percentage_step == 0: 
+          if i % step == 0: 
             percent += 1
           self.__progress(percent, "Parsing playlist")
         
@@ -159,44 +154,43 @@ class Playlist:
           line = line.rstrip()
           if line and line.startswith(INFO_MARKER):
             stream = Stream(line, self.streams_map)
+            ## create channels with various streams so that later we can extract streams with preffered quality
+            if stream.id not in self.channels.iterkeys():
+              log("Creating channel '%s', adding %s stream '%s'" % (stream.id, stream.quality, stream.name))
+              channel = Channel()
+              channel.name = stream.id.decode("utf-8")
+              channel.streams[stream.quality] = stream
+              self.channels[channel.name.decode("utf-8")] = channel
+            else:
+              log("Appending stream '%s' to channel '%s'" % (stream.name, stream.id))
+              channel = self.channels[stream.id.decode("utf-8")]
+              channel.streams[stream.quality] = stream
+              log("Channel '%s' has %s streams" % (stream.id, len(self.channels[stream.id.decode("utf-8")].streams)))            
           else:
             if not stream:
               continue
             stream.url = line
-            self.streams.append(stream)
+            stream.order = stream.get_order()
+            self.streams[stream.name.decode("utf-8")] = stream
             
             stream = None #reset
 
-    log("parse() ended")
+    log("parse() ended") 
+        
 
-    
   def __serialize(self):
     '''
     Serializes streams dict into a file so it can be used later
     '''
     log("__serialize() started")
     _streams = {}
-    for stream in self.streams:
-      _streams[stream.name.decode("utf-8")] = stream.url
+    for name,stream in self.streams.iteritems():
+      _streams[name] = stream.url
     log("serializing %s streams in %s" % (len(_streams), self.streams_file))
     cPickle.dump(_streams, open(self.streams_file, "wb"))
+    #with open(self.streams_file, 'w') as f:
+    #  json.dump(_streams, f)
     log("__serialize() ended")
-
-  
-  def disable_groups(self, disabled_group_names):
-    '''
-    Remove all channels from disabled groups
-    '''
-    log("Disbling streams from groups: %s" % ", ".join(disabled_group_names))
-    i = 0
-    for stream in self.streams:
-      if stream.group in disabled_group_names:
-        stream.disabled = True
-        i += 1
-      else:
-        stream.disabled = False
-    
-    log("%s streams disabled" % i)
 
     
   def reorder(self, **kwargs):
@@ -211,24 +205,28 @@ class Playlist:
     template_order = self.__load_order_template()
     
     percent = 0
-    percentage_step = round(len(self.streams)/100)
-    for i, stream in enumerate(self.streams):
-      if i % percentage_step == 0: 
+    i = 0
+    step = round(len(self.streams)/100)
+    for name, stream in self.streams.iteritems():
+      if i % step == 0: 
         percent += 1
-      self.__progress(percent, "Reording playlist")
-
+      self.__progress(percent, "2. Reording playlist")
+      i += 1
+      
       try:
         stream.order = template_order[stream.name]
-        log ("Found order for '%s'=%s" % (stream.name, stream.order))
+        log("Found order for '%s'=%s" % (stream.name, stream.order))
         # Streams in template should not be disabled
         # So enable stream in case it was disabled
-        stream.disabled = False 
+        stream.disabled = False
       except: 
-        log ("Order for '%s'=%s" % (stream.name, stream.order))
+        log("Order for '%s'=%s" % (stream.name, stream.order))
         pass
     
-    self.streams = sorted(self.streams, key=lambda stream: stream.order)
+    self.streams = OrderedDict(sorted(self.streams.iteritems(), key=lambda val: val[1].order))
+    ##self.streams = sorted(self.streams, key=lambda stream:stream.order)
     log("reorder() ended")
+
 
   def __load_order_template(self):
     template_order = {}
@@ -252,9 +250,8 @@ class Playlist:
     if count_disabled_channels:
       return len(self.streams)
     else:
-      i = 0
-      for stream in self.streams:
-        if stream.group not in self.disabled_groups:
+      for name,stream in self.streams.iteritems():
+        if not stream.disabled:
           i += 1
       return i
 
@@ -264,35 +261,28 @@ class Playlist:
     '''
     log("__to_string() started!")
     self.__progress(0, "Saving playlist. Type: %s" % type)
-    ordered   = ''
-    unordered = ''
     if not type:
       type = self.type
     
+    buffer = ""
     percent = 0
     n = len(self.streams)
-    percentage_step = round(n/100)
+    step = round(n/100)
     enabled_streams = 0
-    for i in range(0, n):
-      if i % percentage_step == 0: 
+    i = 0
+    
+    for name,stream in self.streams.iteritems():
+      if i % step == 0: 
         percent += 1
-      self.__progress(percent, "Saving playlist. Type: %s" % type)
-      
-      if self.streams[i].group in self.disabled_groups:
-        self.streams[i].disabled = True
+      self.__progress(percent, "1. Saving playlist. Type: %s" % type)
+      i += 1
         
-      if not self.streams[i].disabled or type == PlaylistType.NAMES or type == PlaylistType.JSON:
-        stream_string = self.streams[i].to_string(type)
+      if not stream.disabled or stream.group not in self.disabled_groups or type == PlaylistType.NAMES or type == PlaylistType.JSON:
+        stream_string = stream.to_string(type)
         enabled_streams += 1
         if type == PlaylistType.JSON: #append comma
           if i < (n-1): stream_string += ","
-
-        if self.streams[i].order < 9999:
-          ordered += stream_string
-        else:
-          unordered += stream_string
-    
-    buffer = ordered + unordered
+        buffer += stream_string
     
     if type == PlaylistType.KODIPVR or type == PlaylistType.PLAIN:
       buffer = "%s\n%s" % (START_MARKER, buffer)
@@ -300,7 +290,7 @@ class Playlist:
     if type == PlaylistType.JSON:
       buffer = "map=[%s]" % buffer
     
-    log("__to_string() returned %s streams" % enabled_streams)
+    log("__to_string() ended! %s streams returned!" % enabled_streams)
     return buffer.encode("utf-8", "replace")
     
     
@@ -360,7 +350,7 @@ class Playlist:
     Replaces all stream urls with static ones
     That point to our proxy server
     '''
-    for stream in self.streams:
+    for name,stream in self.streams.iteritems():
       name = urllib.quote(stream.name)
       stream.url = url % (port, name)
   
@@ -380,31 +370,28 @@ class Playlist:
     try:
       log("set_preferred_quality() started")
       log("Selecting streams with preferred quality '%s'" % preferred_quality)
-      # group streams by channel
-      if len(self.channels) == 0:
-        self.channels = self.get_channels()
-      
       i = 0
       percent = 0
       percentage_step = round(len(self.channels) / 100)
       for channel_name, channel in self.channels.iteritems():
         if i % percentage_step == 0: 
           percent += 1
-        self.__progress(percent, "Selecting %s streams for channel %s" % (preferred_quality, channel_name))
+        self.__progress(percent, "3. Selecting %s streams for channel %s" % (preferred_quality, channel_name))
         i += 1
         __preferred_quality = preferred_quality
         log("Searching for '%s' stream from channel '%s'" % (__preferred_quality, channel_name))
         ### change quality if there is no stream with the preferred_quality
-        if not channel.has_quality(__preferred_quality):
+        if not channel.streams.get(__preferred_quality):
           __preferred_quality = HD if __preferred_quality == SD else SD
           log("No %s stream for channel '%s'. Changing quality to %s" % (preferred_quality, channel_name, __preferred_quality))
-        # disable channels with unpreferred quality
+        # disable streams with unpreferred quality
         for stream in channel.streams:
           if stream.quality == __preferred_quality:
             stream.disabled = False
             log("Preferred %s stream found. Adding '%s'" % (stream.quality, stream.name))
             #log(stream.to_json())
           else:
+            ## if it's a channel with a single stream, add it.
             if len(channel.streams) == 1 and not forced_disable:
               stream.disabled = False
               log("Adding '%s' stream '%s' (single stream, quality setting is ignored)" % (stream.quality, stream.name))
@@ -419,36 +406,3 @@ class Playlist:
     
     log("Filtered %s channels with preferred quality"% len(self.streams) )
     log("set_preferred_quality() ended!")
-
-    
-  def get_channels(self):
-    '''
-    Group all streams by stream id
-    Returns:
-      A dict of channels, each of them holding a list of streams
-    '''
-    log("get_channels() started!")
-
-    i = 0
-    percent = 0
-    percentage_step = round(len(self.streams) / 100)
-    for stream in self.streams:
-      if i % percentage_step == 0: 
-        percent += 1
-      self.__progress(percent, "Grouping streams in channels")
-      i += 1
-      if stream.id not in self.channels.iterkeys():
-        log("Creating channel '%s', adding %s stream '%s'" % (stream.id, stream.quality, stream.name))
-        channel = Channel()
-        channel.name = stream.id.decode("utf-8")
-        channel.streams.append(stream)
-        self.channels[channel.name.decode("utf-8")] = channel
-      else:
-        log("Appending stream '%s' to channel '%s'" % (stream.name, stream.id))
-        channel = self.channels[stream.id.decode("utf-8")]
-        channel.streams.append(stream)
-        log("Channel '%s' has %s streams" % (stream.id, len(self.channels[stream.id.decode("utf-8")].streams)))
-    log("Streams grouped by id. Results in %s channels" % len(self.channels))
-    log("get_channels() ended!")
-   
-    return self.channels

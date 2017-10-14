@@ -143,6 +143,13 @@ class Stream:
     
     return logo  
     
+  def get_order(self):
+    try:
+      self.order = re.compile("stid=(\d+)").findall(self.url)[0]
+    except:
+      pass
+    return self.order
+
     
   def to_string(self, type=PlaylistType.JSON):
   
@@ -206,11 +213,5 @@ class Stream:
 class Channel:
   
   def __init__(self, name = None):
-    self.streams = []
-    self.name = name
-  
-  def has_quality(self, quality):
-    for stream in self.streams:
-      if stream.quality == quality:
-        return True
-    return False    
+    self.streams = {} #dict with stream quality as a key
+    self.name = name  

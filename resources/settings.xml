@@ -36,7 +36,7 @@
       <setting label="Гръцки" type="bool" id="hide_greek" default="false" visible="eq(-19,false)" />
       <setting label="Български" type="bool" id="hide_bulgarian" default="false" visible="eq(-20,false)" />
       <setting label="Азиатски" type="bool" id="hide_asia" default="false" visible="eq(-21,false)" />
-      <setting label="Други" type="bool" id="hide_others" default="false" visible="eq(-22,false)" />
+      <setting label="Румънски" type="bool" id="hide_roman" default="false" visible="eq(-22,false)" />
       <setting label="Information" type="bool" id="hide_information_pr" default="false" visible="eq(-23,true)" />
       <setting label="Cinema" type="bool" id="hide_movies_pr" default="false" visible="eq(-24,true)" />
       <setting label="News" type="bool" id="hide_news_pr" default="false" visible="eq(-25,true)" />
@@ -51,7 +51,7 @@
       <setting label="Culture" type="bool" id="hide_culture_pr" default="false" visible="eq(-34,true)" />
       <setting label="Romanian" type="bool" id="hide_roman_pr" default="false" visible="eq(-35,true)" />
       <setting label="Greek" type="bool" id="hide_greek_pr" default="false" visible="eq(-36,true)" />
-      <setting label="Румънски" type="bool" id="hide_roman" default="false" visible="eq(-37,false)" />
+      <setting label="Други" type="bool" id="hide_others" default="false" visible="eq(-37,false)" />
       <!-- Go back  -->
     </category>
     <category label="Други">
