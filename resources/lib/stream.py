@@ -18,6 +18,7 @@ class Stream:
   logo      = None
   group     = None
   shift     = None
+  offset    = None
   is_radio  = False
   disabled  = False
   order     = 9999
@@ -51,6 +52,11 @@ class Stream:
     
     self.group = self.__get_group()
     self.logo = self.__get_logo()
+    
+    try: 
+      self.offset = re.compile('(\s\+\d+)').findall(self.name)[0]
+      log("Channel '%s' is time shifted with %s" % (self.name, self.offset))
+    except: pass
     
     try: self.shift = re.compile('shift[=\"\']+(.*?)["\'\s]+').findall(self.line)[0]
     except: pass

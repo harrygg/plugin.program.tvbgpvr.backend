@@ -270,7 +270,7 @@ class Playlist:
       # if i % step == 0: 
         # percent += 1
       # self.__progress(percent, "1. Saving playlist. Type: %s" % type)
-      if self.streams[i].group in self.disabled_groups:
+      if self.streams[i].group in self.disabled_groups or (self.streams[i].offset and settings.hide_timeshifted):
         self.streams[i].disabled = True
       
       if not self.streams[i].disabled or type == PlaylistType.NAMES or type == PlaylistType.JSON:
@@ -297,7 +297,7 @@ class Playlist:
     self.__progress(2, "Downloading map file")
     try:
       if os.environ.get('PVRDEBUG'):
-        raise Exception('Debug mode enabled')
+        raise Exception('Debug mode enabled. Fail the download and force local playlist.')
       url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       log("Downloading streams map from: %s " % url)

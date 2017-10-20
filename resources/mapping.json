@@ -507,7 +507,7 @@
     "France 4":{"g":"fr"},
     "France 5":{"g":"fr"},
     "Canal Algerie":{"g":"fr"},
-    "Moviemax Premier 1":{"g":"tr"},
+    "Moviemax Premier 1":{"n":"Bein Movies", "id":"Moviemax Premier 1", "g":"tr"},
     "Kanal 7 (tr)":{"g":"tr"},
     "Salon 1":{"g":"tr"},
     "Salon 2":{"g":"tr"},

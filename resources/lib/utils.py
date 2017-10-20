@@ -147,7 +147,7 @@ def get_disabled_groups():
 def get_location():
   location = settings.url + settings.mac
   if os.environ.get('PVRDEBUG'):
-    location = 'http://127.0.0.1/tv/playlist.m3u'
+    location = os.environ['PVRDEBUG']
   return location
   
 def get_stream_url(name):

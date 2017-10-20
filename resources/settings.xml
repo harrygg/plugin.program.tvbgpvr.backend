@@ -14,6 +14,7 @@
     </category>
     <category label="Подредба">
       <setting label="Път до шаблон с подредба на канали" type="file"  id="template_file" default="resources/order.txt" />
+      <setting label="Скрий каналите с времево отместване" type="bool"   id="hide_timeshifted" default="false"/>
       <setting label="Използвай имена на групи от доставчик" type="bool"   id="groups_from_progider" default="false"/>
       <setting label="При наличие на няколко версии на канал, предпочитай:"  id="preferred_quality" type="labelenum" lvalues="Всички|HD|SD|LQ"  default="0" />
       <setting label="Премахни канали от следните категории:" type="lsep"/>
