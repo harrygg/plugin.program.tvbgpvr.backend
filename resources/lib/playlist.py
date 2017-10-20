@@ -4,7 +4,7 @@ import re
 import sys
 import json
 import urllib
-import cPickle
+#import cPickle
 import requests
 from stream import *
 from utils import *
@@ -284,7 +284,7 @@ class Playlist:
       buffer = "%s\n%s" % (START_MARKER, buffer)
       
     if type == PlaylistType.JSON:
-      buffer = "map=[%s]" % buffer
+      buffer = "[%s]" % buffer
     
     log("__to_string() returned %s streams" % enabled_streams)
     return buffer.encode("utf-8", "replace")
