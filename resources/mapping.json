@@ -403,6 +403,7 @@
 			"g": "mv"
 		},
 		"Comedy+ (тест)": {
+			"n": "Comedy+",
 			"id": "Comedy+",
 			"g": "mv",
 			"l": "comedyplus"
@@ -1174,6 +1175,11 @@
 			"g": "it"
 		},
 		"Primafila": {
+			"g": "it"
+		},
+		"Cinema Max": {
+			"n": "Top Crime",
+			"id": "Top Crime",
 			"g": "it"
 		},
 		"Premium Stories": {
@@ -2149,5 +2155,5 @@
 		"ro": "Румънски"
 	},
 	"revision": "1",
-	"date": "20171014"
+	"date": "20171022"
 }
