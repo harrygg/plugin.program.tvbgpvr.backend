@@ -616,6 +616,22 @@
 		"Comedy Central UK": {
 			"g": "en"
 		},
+		"True Enternatinment": {
+			"g": "mv"
+		},
+		"True Enternatinment +1": {
+			"g": "mv"
+		},
+		"True Movies": {
+			"n":"True Christmas",
+			"id":"True Christmas",
+			"g": "mv"
+		},
+		"True Movies +1": {
+			"n":"True Christmas +1",
+			"id":"True Christmas +1",
+			"g": "mv"
+		},			
 		"KIX": {
 			"g": "ki"
 		},
@@ -675,17 +691,8 @@
 			"g": "nw"
 		},
 		"BBC 4": {
-			"g": "nw"
-		},
-		"True Enternatinment": {
-			"g": "nw"
-		},
-		"True Enternatinment +1": {
-			"g": "nw"
-		},
-		"True Movies 1": {
-			"g": "nw"
-		},
+			"g": "en"
+		},	
 		"BBC Worldnews": {
 			"g": "nw"
 		},
