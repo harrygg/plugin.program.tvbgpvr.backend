@@ -1500,6 +1500,11 @@
 		"Russian Travel Guide": {
 			"g": "ru"
 		},
+		"Russian Travel Giude": {
+			"g": "ru",
+			"id":"Russian Travel Guide",
+			"n":"Russian Travel Guide"
+		},
 		"Ю": {
 			"g": "ru"
 		},
