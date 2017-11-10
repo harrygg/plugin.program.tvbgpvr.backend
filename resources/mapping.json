@@ -1680,7 +1680,9 @@
 			"g": "tr"
 		},
 		"Salon 2": {
-			"g": "tr"
+			"g": "tr",
+      "id": "Cinestar Vizyon 1",
+      "name": "Cinestar Vizyon 1"
 		},
 		"Salon 3": {
 			"g": "tr"

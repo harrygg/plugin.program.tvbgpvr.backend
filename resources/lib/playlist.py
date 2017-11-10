@@ -347,7 +347,7 @@ class Playlist:
     That point to our proxy server
     '''
     for stream in self.streams:
-      name = urllib.quote(stream.name)
+      name = urllib.quote(stream.name.encode("utf-8"))
       stream.url = url % (port, name)
   
 
