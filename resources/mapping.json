@@ -340,9 +340,6 @@
 			"id": "ПП ТВ",
 			"l": "pptv"
 		},
-		"GO TV": {
-			"g": "bg"
-		},
 		"The World": {
 			"g": "dc"
 		},
@@ -462,7 +459,7 @@
 		},
 		"Sky Folk": {
 			"g": "st",
-			"n": "Mtel Sport 1 / Sky Folk",
+			"n": "Sky Folk (Mtel Sport 1)",
 			"id": "Mtel Sport 1"
 		},
 		"LIG TV": {
@@ -780,7 +777,12 @@
 			"g": "dc"
 		},
 		"BG Info": {
-			"g": "dc"
+			"n": "BG Info (GO TV)",
+			"id": "GO TV",
+			"g": "bg"
+		},
+		"GO TV": {
+			"g": "bg"
 		},
 		"M1": {
 			"g": "mu"
