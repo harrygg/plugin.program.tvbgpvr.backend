@@ -13,6 +13,19 @@ from resources.lib.playlist import *
   # pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
 #end_append_pydev_remote_debugger	
 
+if settings.ipcheck:
+  i = 1
+  max_attempts = 10
+  ip = get_ip()
+  while ip != settings.ip:
+    notify("Attempt #%s, IP %s does not match" % (i, ip))
+    xbmc.sleep(15000)
+    ip = get_ip()
+    i += 1
+    if i > max_attempts:
+      notify_error("IP value does not match with IP in settings!!!")
+      raise Exception("IP value does not match with IP in settings!")
+
 log("Addon running on: %s" % user_agent)
 if scheduled_run:
   log(translate(32004))

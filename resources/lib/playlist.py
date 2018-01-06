@@ -216,6 +216,7 @@ class Playlist:
         # Streams in template should not be disabled
         # So enable stream in case it was disabled
         stream.disabled = False
+        stream.in_template = True
       except: 
         log("Order for '%s'=%s" % (stream.name, stream.order))
         pass
@@ -270,7 +271,7 @@ class Playlist:
       # if i % step == 0: 
         # percent += 1
       # self.__progress(percent, "1. Saving playlist. Type: %s" % type)
-      if self.streams[i].group in self.disabled_groups or (self.streams[i].offset and settings.hide_timeshifted):
+      if not self.streams[i].in_template and (self.streams[i].group in self.disabled_groups or (self.streams[i].offset and settings.hide_timeshifted)):
         self.streams[i].disabled = True
       
       if not self.streams[i].disabled or type == PlaylistType.NAMES or type == PlaylistType.JSON:

@@ -14,6 +14,7 @@
     </category>
     <category label="Подредба">
       <setting label="Път до шаблон с подредба на канали" type="file"  id="template_file" default="resources/order.txt" />
+      <setting label="Подреждай канали извън шаблона по:"  id="order_type" type="enum" lvalues="Име|Ред от сървъра"  default="0" />
       <setting label="Скрий каналите с времево отместване" type="bool"   id="hide_timeshifted" default="false"/>
       <setting label="Използвай имена на групи от доставчик" type="bool"   id="groups_from_progider" default="false"/>
       <setting label="При наличие на няколко версии на канал, предпочитай:"  id="preferred_quality" type="labelenum" lvalues="Всички|HD|SD|LQ"  default="0" />
@@ -61,5 +62,8 @@
       <setting label="Път до директорията за експортиране" type="folder" id="export_to_folder" default="" option="writeable" visible="eq(-1,true)"/>
       <setting type="sep"/>
       <setting label="Разширен журнал (Дебъг)" type="bool"   id="debug" default="false"/>
+      <setting label="IP Check" type="bool" default="false" id="ipcheck" />
+      <setting label="IP" type="text" default="" id="ip" visible="eq(-1,true)" />
+      
     </category>
 </settings>

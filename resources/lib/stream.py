@@ -12,18 +12,19 @@ class Stream:
   '''
     Class definition for m3u stream entries
   '''
-  name      = None
-  id        = None
-  url       = None
-  logo      = None
-  group     = None
-  shift     = None
-  offset    = None
-  is_radio  = False
-  disabled  = False
-  order     = 9999
-  quality   = SD
-  __props   = {}
+  name        = None
+  id          = None
+  url         = None
+  logo        = None
+  group       = None
+  shift       = None
+  offset      = None
+  is_radio    = False
+  disabled    = False
+  in_template = False
+  order       = 99999
+  quality     = SD
+  __props     = {}
   
   
   def __init__(self, line, map):

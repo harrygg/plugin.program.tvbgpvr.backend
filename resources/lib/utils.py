@@ -3,9 +3,11 @@ import os
 import sys
 import json
 import xbmc
+import requests
 import xbmcaddon
-import cPickle
-
+#import cPickle
+from random import randint
+  
 reload(sys)  
 sys.setdefaultencoding('utf8')
 
@@ -143,6 +145,21 @@ def get_disabled_groups():
     disabled_groups.append('romanian') 
   
   return disabled_groups
+
+def get_ip():
+  servers = [
+    "http://api.infoip.io/ip", 
+    "https://api.ipify.org/?format=txt",
+    "https://icanhazip.com/",
+    "http://checkip.amazonaws.com/",
+    "http://www.trackip.net/ip",
+    "http://bot.whatismyipaddress.com/",
+    "http://ipecho.net/plain",
+  ]
+  server = servers[randint(0, len(servers) - 1)]
+  log("get_ip() from server %s" % server)
+  ip = requests.get(server).text
+  log("Found ip=%s" % ip)
   
 def get_location():
   location = settings.url + settings.mac
