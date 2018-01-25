@@ -168,6 +168,10 @@
 		"Discovery Channel": {
 			"g": "dc"
 		},
+		"Discovery HD": {
+			"id": "Discovery Channel",
+			"g": "dc"
+		},
 		"Discovery LQ": {
 			"id": "Discovery Channel",
 			"g": "dc"
@@ -458,9 +462,8 @@
 			"g": "st"
 		},
 		"Sky Folk": {
-			"g": "st",
-			"n": "Sky Folk (Mtel Sport 1)",
-			"id": "Mtel Sport 1"
+			"g": "mu",
+			"n": "Sky Folk"
 		},
 		"LIG TV": {
 			"g": "st",
@@ -857,6 +860,9 @@
 			"g": "mu"
 		},
 		"Mezzo Live": {
+			"g": "mu"
+		},
+		"MM TV": {
 			"g": "mu"
 		},
 		"Fast&FunBox": {
