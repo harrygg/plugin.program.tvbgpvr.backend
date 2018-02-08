@@ -21,7 +21,7 @@ def create_server(ip, app, port=18910):
   Create a new WSGI server listening on 'port' for WSGI app
   """
   ServerHandler.http_version = '1.1'
-  ServerHandler.server_software = "STATIC.PLAYLIST.PVR.BACKEND"
+  ServerHandler.server_software = "TVBGPVR.BACKEND"
 
   return make_server(ip, port, app,
                      server_class=ThreadedWSGIServer,
