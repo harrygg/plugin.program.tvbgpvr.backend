@@ -1,4 +1,4 @@
-from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
+from wsgiref.simple_server import ServerHandler, WSGIServer, WSGIRequestHandler, make_server
 from SocketServer import ThreadingMixIn
 
 class SilentWSGIRequestHandler(WSGIRequestHandler):
@@ -16,10 +16,13 @@ class ThreadedWSGIServer(ThreadingMixIn, WSGIServer):
   daemon_threads = True
 
 
-def create_server(app, port=18910):
+def create_server(ip, app, port=18910):
   """
   Create a new WSGI server listening on 'port' for WSGI app
   """
-  return make_server("127.0.0.1", port, app,
+  ServerHandler.http_version = '1.1'
+  ServerHandler.server_software = "STATIC.PLAYLIST.PVR.BACKEND"
+
+  return make_server(ip, port, app,
                      server_class=ThreadedWSGIServer,
                      handler_class=SilentWSGIRequestHandler)

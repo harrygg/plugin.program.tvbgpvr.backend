@@ -6,7 +6,7 @@ from resources.lib.utils import *
 executebuiltin(RUNSCRIPT)
 monitor = Monitor()
 
-httpd = create_server(app, port=port)
+httpd = create_server(BIND_IP, app, port=port)
 httpd.timeout = 0.1
 starting = True
 

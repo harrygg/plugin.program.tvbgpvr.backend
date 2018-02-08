@@ -10,7 +10,6 @@
       <setting label="Път до директорията" type="folder" id="copy_to_folder" default="" option="writeable" visible="eq(-1,true)"/>
       <setting type="sep"/>
       <setting label="Генерирай плейлиста на всеки N часа" type="slider" id="run_on_interval" default="12" range="1,1,24" option="int"/>
-      <setting label="Порт на бекенда" type="text" id="port" default="18910" />
     </category>
     <category label="Подредба">
       <setting label="Път до шаблон с подредба на канали" type="file"  id="template_file" default="resources/order.txt" />
@@ -55,11 +54,19 @@
       <setting label="Други" type="bool" id="hide_others" default="false" visible="eq(-37,false)" />
       <!-- Go back  -->
     </category>
+    <category label="Експертни">
+      <setting type="sep"/>
+      <setting label="Разреши свързване на всички мрежови интерфейси:" type="bool" id="bind_all" default="false" />
+      <setting label="Порт на бекенда:" type="text" id="port" default="18910" />
+      <setting type="sep"/>
+      <setting label="Разширен журнал (Дебъг лог):" type="bool"   id="debug" default="false"/>
+    </category>
     <category label="Други">
+      <!-- <setting label="Обедини с друга плейлиста:" type="bool" id="append_playlist" default="false"/> -->
+      <!-- <setting label="M3U файл с другата плейлиста:" id="appended_playlist_path" type="file" values="" mask="*.m3u" visible="eq(-1,true)" /> -->
+      <!-- <setting label="Добавяне" type="enum"   id="append" values="Преди основната|След основната"  default="0" visible="eq(-2,true)" /> -->
       <setting type="sep"/>
       <setting label="Експортирай имената на каналите от плейлистата" type="bool" id="export_names" default="false"/>
       <setting label="Път до директорията за експортиране" type="folder" id="export_to_folder" default="" option="writeable" visible="eq(-1,true)"/>
-      <setting type="sep"/>
-      <setting label="Разширен журнал (Дебъг)" type="bool"   id="debug" default="false"/>
     </category>
 </settings>

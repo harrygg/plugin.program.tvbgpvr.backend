@@ -4,9 +4,9 @@ import re
 import requests
 from utils import *
 from urllib import unquote
-from bottle import route, default_app, HTTPResponse
+from bottle import route, default_app, request, HTTPResponse
 
-__DEBUG__ = os.environ.get('PVRDEBUG')
+__DEBUG__ = os.environ.get('TVBGPVRDEBUG')
 app       = default_app()
 port      = settings.port
 
@@ -26,7 +26,9 @@ def get_playlist():
     log(str(er))
 
   headers = {}
-  if not __DEBUG__:
+  if request.query.get("debug"):
+    body = "<pre>" + body + "</pre>"
+  else:
     headers['Content-Type'] = "audio/mpegurl"
     
   log("get_playlist() ended")
@@ -53,12 +55,18 @@ def get_stream(name):
   location = None
 
   log("get_stream() started.")
-  ### Kodi 17 sends 2 GET requests for a resource which may cause 
-  ### stream invalidation on some middleware servers. If this is 
+  log("User-agent header: %s" % request.headers.get("User-Agent"))
+  try:
+    is_tvheadend = "TVHeadend" in request.headers.get("User-Agent")
+  except:
+    is_tvheaded = False
+  ### Kodi 17 sends 2 GET requests for a resource which may cause
+  ### stream invalidation on some middleware servers. If this is
   ### the first request return a dummy response and handle the 2nd
-  #if VERSION > 16 and not os.path.isfile(session):
-  if VERSION > 16 and not settings.first_request:
-    settings.first_request = True
+  log("Is TV Headned: %s" % is_tvheadend)
+  if not is_tvheadend and VERSION == 17 and not settings.first_request_sent:
+
+    settings.first_request_sent = True
     log("get_stream() ended. First request handled!")
     return HTTPResponse(body, 
                       status = 200,
@@ -66,7 +74,7 @@ def get_stream(name):
   
   ### If this is the 2nd request by the player
   ### redirect it to the original stream  
-  settings.first_request = False
+  settings.first_request_sent = False
 
   try:  
     stream_name = unquote(name)

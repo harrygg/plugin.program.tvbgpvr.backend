@@ -213,9 +213,9 @@ class Playlist:
       try:
         stream.order = template_order[stream.name]
         log ("Found order for '%s'=%s" % (stream.name, stream.order))
-        # Streams in template should not be disabled
-        # So enable stream in case it was disabled
-        stream.disabled = False
+        # Streams in template should always be added to the playlist
+        # So enable stream is_favored property
+        stream.is_favored = True
       except: 
         log("Order for '%s'=%s" % (stream.name, stream.order))
         pass
@@ -273,7 +273,7 @@ class Playlist:
       if self.streams[i].group in self.disabled_groups or (self.streams[i].offset and settings.hide_timeshifted):
         self.streams[i].disabled = True
       
-      if not self.streams[i].disabled or type == PlaylistType.NAMES or type == PlaylistType.JSON:
+      if self.streams[i].is_favored or not self.streams[i].disabled or type == PlaylistType.NAMES or type == PlaylistType.JSON:
         stream_string = self.streams[i].to_string(type)
         enabled_streams += 1
         if type == PlaylistType.JSON: #append comma
@@ -296,7 +296,7 @@ class Playlist:
     '''
     self.__progress(2, "Downloading map file")
     try:
-      if os.environ.get('PVRDEBUG'):
+      if os.environ.get('TVBGPVRDEBUG'):
         raise Exception('Debug mode enabled. Fail the download and force local playlist.')
       url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
@@ -341,14 +341,14 @@ class Playlist:
       log(er, 4)
       return False
 
-  def set_static_stream_urls(self, url, port):
+  def set_static_stream_urls(self, url):
     '''
     Replaces all stream urls with static ones
     That point to our proxy server
     '''
     for stream in self.streams:
       name = urllib.quote(stream.name.encode("utf-8"))
-      stream.url = url % (port, name)
+      stream.url = url % (name)
   
 
   def set_preferred_quality(self, preferred_quality, forced_disable=False):

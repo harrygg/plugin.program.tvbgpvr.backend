@@ -22,6 +22,7 @@ class Stream:
   is_radio  = False
   disabled  = False
   order     = 9999
+  is_favored= False
   quality   = SD
   __props   = {}
   

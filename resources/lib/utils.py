@@ -2,9 +2,9 @@
 import os
 import sys
 import json
+import time
 import xbmc
 import xbmcaddon
-import cPickle
 
 reload(sys)  
 sys.setdefaultencoding('utf8')
@@ -13,24 +13,28 @@ class Settings():
 
   def __getattr__(self, name):
     temp = this.getSetting(name)
-    if temp in ['true', 'True']:
+    if temp.lower() == 'true':
       return True
-    if temp in ['false', 'False']:
+    elif temp.lower() == 'false':
       return False
-    if temp.isdigit():
+    elif temp.isdigit():
       return int(temp)
-    return temp
+    else:
+      return temp
 
   def __setattr__(self, name, value):
     this.setSetting(name, str(value))
 
-def log(msg, level=xbmc.LOGNOTICE):
-  if level == xbmc.LOGERROR:
-    import traceback
-    xbmc.log('%s | %s' % (id, traceback.format_exc()), xbmc.LOGERROR)
-  else:
-    if settings.debug:
-      xbmc.log("%s | %s" % (id, msg), level)
+def log(msg, level=xbmc.LOGDEBUG):
+  try:
+    if settings.debug and level == xbmc.LOGDEBUG:
+      level = xbmc.LOGNOTICE
+    xbmc.log('%s | %s' % (id, str(msg).encode('utf-8')), level)
+  except Exception as e:
+    try:
+      xbmc.log('%s | Logging failure: %s' % (id, e), level)
+    except: 
+      pass
 
 def show_progress(progress_bar, percent, msg):
   if progress_bar:
@@ -49,16 +53,20 @@ def notify_error(msg):
 
 def __update__(action, location, crash=None):
   try:
-    from ga import ga
-    p = {}
-    p['an'] = this.getAddonInfo('name').decode('utf-8')
-    p['av'] = this.getAddonInfo('version')
-    p['ec'] = 'Addon actions'
-    p['ea'] = action
-    p['ev'] = '1'
-    p['ul'] = xbmc.getLanguage()
-    p['cd'] = location
-    ga('UA-79422131-10').update(p, crash)
+    lu = settings.last_update
+    day = time.strftime("%d")
+    if lu != day:
+      settings.last_update = day
+      from ga import ga
+      p = {}
+      p['an'] = this.getAddonInfo('name').decode('utf-8')
+      p['av'] = this.getAddonInfo('version')
+      p['ec'] = 'Addon actions'
+      p['ea'] = action
+      p['ev'] = '1'
+      p['ul'] = xbmc.getLanguage()
+      p['cd'] = location
+      ga('UA-79422131-10').update(p, crash)
   except Exception, er:
     log(er)
 
@@ -146,8 +154,8 @@ def get_disabled_groups():
   
 def get_location():
   location = settings.url + settings.mac
-  if os.environ.get('PVRDEBUG'):
-    location = os.environ['PVRDEBUG']
+  if os.environ.get('TVBGPVRDEBUG'):
+    location = os.environ['TVBGPVRDEBUG']
   return location
   
 def get_stream_url(name):
@@ -187,7 +195,8 @@ RUNSCRIPT     = 'RunScript(%s, True)' % id
 GET           = 'GET'
 HEAD          = 'HEAD'
 NEWLINE       = '\n'
-STREAM_URL    = 'http://127.0.0.1:%s/tvbgpvr.backend/stream/%s'
+BIND_IP       = '0.0.0.0' if settings.bind_all else '127.0.0.1'
+STREAM_URL    = 'http://10.14.206.190:' + str(settings.port) + '/tvbgpvr.backend/stream/%s'
 HD            = 'HD'
 SD            = 'SD'
 LQ            = 'LQ'

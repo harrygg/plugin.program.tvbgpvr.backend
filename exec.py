@@ -7,7 +7,7 @@ from resources.lib.utils import *
 from resources.lib.playlist import *
 
 #append_pydev_remote_debugger
-# if os.environ.get('PVRDEBUG'):
+# if os.environ.get('TVBGPVRDEBUG'):
   # sys.path.append(os.environ['PYSRC'])
   # import pydevd
   # pydevd.settrace('127.0.0.1', stdoutToServer=False, stderrToServer=False)
@@ -43,7 +43,7 @@ try:
     pl.reorder(template_file=get_template_file())
     
     ### Replace stream URLs with static ones
-    pl.set_static_stream_urls(STREAM_URL, settings.port)
+    pl.set_static_stream_urls(STREAM_URL)
 
     ### Export channel names from original playlist
     if settings.export_names:
