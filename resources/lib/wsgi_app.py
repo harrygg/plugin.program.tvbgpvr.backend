@@ -10,6 +10,7 @@ __DEBUG__ = os.environ.get('TVBGPVRDEBUG')
 app       = default_app()
 port      = settings.port
 
+@route('/playlist', method=GET)
 @route('/tvbgpvr.backend/playlist', method=GET)
 def get_playlist():
   """
@@ -21,13 +22,17 @@ def get_playlist():
   try:
     with open(pl_path) as file:
       body = file.read() 
+      
   except Exception as er:
     body = str(er)
     log(str(er))
 
   headers = {}
-  if request.query.get("debug"):
+  
+  #explicitly check for None as it could be empty value
+  if request.query.get("debug") != None:
     body = "<pre>" + body + "</pre>"
+    
   else:
     headers['Content-Type'] = "audio/mpegurl"
     
@@ -38,22 +43,30 @@ def get_playlist():
                       **headers)
 
 
+@route('/stream/<name>', method=HEAD)
 @route('/tvbgpvr.backend/stream/<name>', method=HEAD)
 def get_stream(name):
   return HTTPResponse(None, 
                       status=200)
 
 
+@route('/stream/<name>', method=GET)
 @route('/tvbgpvr.backend/stream/<name>', method=GET)
 def get_stream(name):
   '''
     Get the m3u stream url
     Returns 302 redirect
   '''
+  
   headers  = {}
   body     = None
   location = None
 
+  if request.query.get("debug") != None:
+    stream_name = unquote(name)
+    location = get_stream_url(stream_name)
+    return HTTPResponse(location, status = 200)
+    
   log("get_stream() started.")
   log("User-agent header: %s" % request.headers.get("User-Agent"))
   try:

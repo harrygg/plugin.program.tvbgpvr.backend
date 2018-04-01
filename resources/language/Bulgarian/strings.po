@@ -59,3 +59,19 @@ msgstr ""
 msgctxt "#32008"
 msgid "Не е намерен поток за канал %s"
 msgstr ""
+
+msgctxt "#32100"
+msgid "Всички"
+msgstr ""
+
+msgctxt "#32101"
+msgid "HD"
+msgstr ""
+
+msgctxt "#32102"
+msgid "SD"
+msgstr ""
+
+msgctxt "#32103"
+msgid "LQ"
+msgstr ""

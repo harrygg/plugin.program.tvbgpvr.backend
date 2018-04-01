@@ -13,6 +13,8 @@ class Settings():
 
   def __getattr__(self, name):
     temp = this.getSetting(name)
+    if (name != "debug"):
+      log ("getting setting %s=%s" % (name, temp))
     if temp.lower() == 'true':
       return True
     elif temp.lower() == 'false':
@@ -174,7 +176,7 @@ def get_stream_url(name):
    
 ## Initialize the addon
 id            = 'plugin.program.tvbgpvr.backend'
-this          = xbmcaddon.Addon(id=id)
+this          = xbmcaddon.Addon()
 translate     = this.getLocalizedString
 settings      = Settings()
 pl_name       = 'playlist.m3u'

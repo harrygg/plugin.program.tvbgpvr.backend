@@ -1165,7 +1165,13 @@
 		"Realitatea TV": {
 			"g": "ro"
 		},
+		"Inedit TV": {
+			"g": "ro"
+		},
 		"Alfa Omega TV": {
+			"g": "ro"
+		},
+		"TV SudEst": {
 			"g": "ro"
 		},
 		"Est TV": {
@@ -1643,6 +1649,9 @@
 			"g": "ru"
 		},
 		"ARTE Francais": {
+			"g": "fr"
+		},
+		"Eurochannel": {
 			"g": "fr"
 		},
 		"TF1": {

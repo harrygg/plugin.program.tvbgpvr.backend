@@ -54,6 +54,7 @@ class Playlist:
       raise
 
   def __progress(self, percent, msg):
+  
     if self.progress_callback:
       self.progress_callback.update(percent, str(msg))
     
@@ -64,6 +65,7 @@ class Playlist:
     ret = True
     log("__load() started")
     self.__progress(5, "Loading playlist from: %s" % self.location)
+    
     if self.location.startswith("http") or self.location.startswith("ftp"):
       ret = self.__download()
     
@@ -77,26 +79,34 @@ class Playlist:
       headers = {}
       if self.user_agent:
         headers = {"User-agent": self.user_agent}
+        
       log("Downloading resource from: %s " % self.location)
       response = requests.get(self.location, headers=headers)
       log("Server status_code: %s " % response.status_code)
+      
       if response.status_code >= 200 and response.status_code < 400:
         chunk_size = self.__get_chunk_size__(response)
         self.__cache(self.__iter_lines__(response, chunk_size)) #using response.text.splitlines() is way too slow on singleboard devices!!!
+        
       else:
         log("Unsupported status code received from server: %s" % response.status_code)
         return False
+        
       return True
+      
     except Exception, er:
       log(er, 4)
       return False
     
   def __get_chunk_size__(self, response):
     try:
+    
       size = int(response.headers['Content-length'])
       if size > 0: 
         return size/100
+        
     except: pass
+    
     return 2048
   
   def __iter_lines__(self, response, chunk_size, delimiter=None):
@@ -104,19 +114,27 @@ class Playlist:
       Implementation of iter_lines to include progress bar
     '''
     pending = None
+    
     for chunk in response.iter_content(chunk_size=chunk_size, decode_unicode=True):
+    
       if pending is not None:
         chunk = pending + chunk
+        
       if delimiter:
         lines = chunk.split(delimiter)
+        
       else:
         lines = chunk.splitlines()
+        
       if lines and lines[-1] and chunk and lines[-1][-1] == chunk[-1]:
         pending = lines.pop()
+        
       else:
         pending = None
+        
       for line in lines:
         yield line
+        
     if pending is not None:
         yield pending
 
@@ -127,10 +145,12 @@ class Playlist:
     '''
     log("cache() started!")
     self.location = self.cache_file
+    
     with open(self.location, "w") as file:
       for line in content:
         self.size += 1
         file.write("%s\n" % line.rstrip().encode("utf-8"))
+        
     log("cache() ended!")
  
   def __parse(self):
@@ -142,6 +162,7 @@ class Playlist:
     percent = 10  
     max = 80
     step = round(self.size/max) if self.size > 0 else 16
+    
     with open(self.location, "r") as file_content:
       for i, line in enumerate(file_content):
         if self.size > 0: # if true, we have counted the lines
@@ -151,8 +172,10 @@ class Playlist:
         
         if not line.startswith(START_MARKER):
           line = line.rstrip()
+          
           if line and line.startswith(INFO_MARKER):
             stream = Stream(line, self.__map)
+            
             ## create channels with various streams so that later we can extract streams with preffered quality
             if stream.id not in self.channels.iterkeys():
               log("Creating channel '%s', adding %s stream '%s'" % (stream.id, stream.quality, stream.name))
@@ -160,14 +183,17 @@ class Playlist:
               channel.name = stream.id.decode("utf-8")
               channel.streams[stream.quality] = stream
               self.channels[channel.name.decode("utf-8")] = channel
+              
             else:
               log("Appending stream '%s' to channel '%s'" % (stream.name, stream.id))
               channel = self.channels[stream.id.decode("utf-8")]
               channel.streams[stream.quality] = stream
-              log("Channel '%s' has %s streams" % (stream.id, len(self.channels[stream.id.decode("utf-8")].streams)))            
+              log("Channel '%s' has %s streams" % (stream.id, len(self.channels[stream.id.decode("utf-8")].streams)))  
+              
           else:
             if not stream:
               continue
+              
             stream.url = line
             stream.order = stream.get_order()
             self.streams.append(stream)
@@ -184,12 +210,16 @@ class Playlist:
     log("__serialize() started")
     self.__progress(10, "Serializing streams")
     _streams = {}
+    
     for stream in self.streams:
       _streams[stream.name] = stream.url
+      
     log("serializing %s streams in %s" % (len(_streams), self.streams_file))
     #cPickle.dump(_streams, open(self.streams_file, "wb"))
+    
     with open(self.streams_file, "w") as w:
       w.write(json.dumps(_streams, ensure_ascii=False))
+      
     log("__serialize() ended")
 
     
@@ -205,6 +235,8 @@ class Playlist:
     percent = 95
     max = 3
     step = round(len(self.streams)/max)
+    log("Reordering streams")
+    
     for i, stream in enumerate(self.streams):
       if i % step == 0: 
         percent += 1
@@ -212,12 +244,13 @@ class Playlist:
 
       try:
         stream.order = template_order[stream.name]
-        log ("Found order for '%s'=%s" % (stream.name, stream.order))
+        log ("'%s'=%s - order found in order.txt file" % (stream.name, stream.order))
         # Streams in template should always be added to the playlist
         # So enable stream is_favored property
         stream.is_favored = True
+        
       except: 
-        log("Order for '%s'=%s" % (stream.name, stream.order))
+        log("'%s'=%s - ordered by original stream id" % (stream.name, stream.order))
         pass
     
     self.streams = sorted(self.streams, key=lambda stream:stream.order)
@@ -225,15 +258,20 @@ class Playlist:
 
 
   def __load_order_template(self):
+  
     template_order = {}
+    
     try:
       with open(self.template_file) as file_content:
         log("Reading template file %s " % self.template_file)
+        
         for i, line in enumerate(file_content):
           template_order[line.rstrip()] = i
           log("%s=%s" % (line.rstrip(), i))
+          
     except Exception, er:
       log(er, 4)
+      
     return template_order
 
   def add(self, new_m3u_location):
@@ -243,13 +281,17 @@ class Playlist:
     self.load(new_m3u_location)
   
   def count(self, count_disabled_channels=True):
+  
     if count_disabled_channels:
       return len(self.streams)
+      
     else:
       i = 0
+      
       for stream in self.streams:
         if stream.group not in self.disabled_groups:
           i += 1
+          
       return i
 
   def __to_string(self, type):
@@ -266,10 +308,12 @@ class Playlist:
     n = len(self.streams)
     # step = round(n/100)
     enabled_streams = 0
+    
     for i in range(0, n):
       # if i % step == 0: 
         # percent += 1
       # self.__progress(percent, "1. Saving playlist. Type: %s" % type)
+      # Disable streams from disabled groups or streams with offset (only when hide_timeshifted is enabled)
       if self.streams[i].group in self.disabled_groups or (self.streams[i].offset and settings.hide_timeshifted):
         self.streams[i].disabled = True
       
@@ -294,25 +338,33 @@ class Playlist:
     '''
     Downloads mapping file. If downloads fails loads the local file.
     '''
+    
     self.__progress(2, "Downloading map file")
+    
     try:
-      if os.environ.get('TVBGPVRDEBUG'):
-        raise Exception('Debug mode enabled. Fail the download and force local playlist.')
+      #if os.environ.get('TVBGPVRDEBUG'):
+      #  raise Exception('Debug mode enabled. Fail the download and force local playlist.')
+        
       url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       log("Downloading streams map from: %s " % url)
       response = requests.get(url, headers=headers)
       log("Map server status code: %s " % response.status_code)
       log("Map size: %s " % response.headers["Content-Length"])
+
       if response.status_code < 200 and response.status_code >= 400:
         raise Exception("Unsupported status code!")
+      
       self.__map = response.json()
+      
     except Exception as ex:
       log("Downloading map failed!")
       log(ex)
       log("Loading local map %s " % self.mapping_file)
+      
       with open(self.mapping_file) as data_file:
         self.__map = json.load(data_file)
+    
     log("Loaded map. Date %s Rev. %s" % (self.__map["date"], self.__map["revision"]))
     
     
@@ -332,9 +384,11 @@ class Playlist:
     type = kwargs.get('type', self.type)
       
     try:
+    
       with open(file_path, 'w') as file:
         log("Saving playlist type %s in %s " % (str(type), file_path))
         file.write(self.__to_string(type))
+        
       return True
     
     except Exception, er:
@@ -364,11 +418,13 @@ class Playlist:
     '''
     _streams = []
     try:
+    
       log("set_preferred_quality() started")
       i = 0
       percent = 90
       max = 5
       step = round(len(self.channels) / max)
+      
       for channel_name, channel in self.channels.iteritems():
         if i % step == 0: 
           percent += 1
@@ -376,26 +432,31 @@ class Playlist:
         i += 1
         __preferred_quality = preferred_quality
         log("Searching for '%s' stream from channel '%s'" % (__preferred_quality, channel_name))
+        
         ### change quality if there is no stream with the preferred_quality
         if not channel.streams.get(__preferred_quality):
           __preferred_quality = HD if __preferred_quality == SD else SD
           log("No %s stream for channel '%s'. Changing quality to %s" % (preferred_quality, channel_name, __preferred_quality))
+          
         # disable streams with unpreferred quality
         for quality,stream in channel.streams.iteritems():
           if quality == __preferred_quality:
             stream.disabled = False
             log("Preferred %s stream found. Adding '%s'" % (stream.quality, stream.name))
+            
           else:
             ## if it's a channel with a single stream, add it.
             if len(channel.streams) == 1 and not forced_disable:
               stream.disabled = False
               log("Adding '%s' stream '%s' (single stream, quality setting is ignored)" % (stream.quality, stream.name))
+              
             else:
               log("Disabling unpreferred '%s' stream %s" % (stream.quality, stream.name))
               stream.disabled = True
           _streams.append(stream)
       
       self.streams = _streams
+      
     except Exception as er:
       log(er)
     
