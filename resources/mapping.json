@@ -103,6 +103,9 @@
 		"TV 1000": {
 			"g": "mv"
 		},
+		"Epic Drama": {
+			"g": "mv"
+		},
 		"DIVA Universal": {
 			"g": "bg"
 		},
@@ -268,6 +271,9 @@
 		"Da Vinci Learning": {
 			"g": "dc"
 		},
+		"BBC Earth": {
+			"g": "dc"
+		},
 		"Дартс": {
 			"g": "bg"
 		},
@@ -379,7 +385,7 @@
 		},
 		"CBS Drama": {
 			"n": "Sundance TV",
-			"id":"Sundance TV",
+			"id": "Sundance TV",
 			"g": "mv"
 		},
 		"CBS Reality": {
@@ -533,6 +539,12 @@
 		"Матч! Футбол 3": {
 			"g": "st"
 		},
+		"Футбол 1 HD (Укр)": {
+			"g": "st"
+		},
+		"Футбол 2 HD (Укр)": {
+			"g": "st"
+		},
 		"Наш Футбол": {
 			"g": "st"
 		},
@@ -624,15 +636,15 @@
 			"g": "mv"
 		},
 		"True Movies 1": {
-			"n":"True Christmas",
-			"id":"True Christmas",
+			"n": "True Christmas",
+			"id": "True Christmas",
 			"g": "mv"
 		},
 		"True Movies +1": {
-			"n":"True Christmas +1",
-			"id":"True Christmas +1",
+			"n": "True Christmas +1",
+			"id": "True Christmas +1",
 			"g": "mv"
-		},			
+		},
 		"KIX": {
 			"g": "ki"
 		},
@@ -691,9 +703,15 @@
 		"Sky News": {
 			"g": "nw"
 		},
+		"BBC 1": {
+			"g": "en"
+		},
+		"BBC 2": {
+			"g": "en"
+		},
 		"BBC 4": {
 			"g": "en"
-		},	
+		},
 		"BBC Worldnews": {
 			"g": "nw"
 		},
@@ -865,6 +883,9 @@
 		"MM TV": {
 			"g": "mu"
 		},
+		"MCM Top": {
+			"g": "mu"
+		},
 		"Fast&FunBox": {
 			"g": "th"
 		},
@@ -888,6 +909,10 @@
 			"g": "th"
 		},
 		"F.O. HD": {
+			"id": "F.O. TV",
+			"g": "th"
+		},
+		"F.O. SD": {
 			"id": "F.O. TV",
 			"g": "th"
 		},
@@ -972,6 +997,10 @@
 			"g": "mu"
 		},
 		"Фолклор ТВ": {
+			"id": "Фолклор",
+			"g": "mu"
+		},
+		"Фолклор HD": {
 			"id": "Фолклор",
 			"g": "mu"
 		},
@@ -1272,12 +1301,21 @@
 			"id": "PRO7",
 			"g": "de"
 		},
+		"ProSieben Maxx": {
+			"g": "de"
+		},
 		"PRO7": {
 			"id": "PRO7",
 			"g": "de"
 		},
 		"Kabel Eins": {
 			"g": "de"
+		},
+		"Kabel 1 Doku": {
+			"g": "de"
+		},
+		"Deutsches Musik": {
+			"g": "mu"
 		},
 		"VOX": {
 			"g": "de"
@@ -1301,7 +1339,7 @@
 			"id": "N24",
 			"g": "de"
 		},
-		"N24 Docu": {
+		"N24 Doku": {
 			"g": "de"
 		},
 		"WDR": {
@@ -1399,6 +1437,9 @@
 			"g": "ru"
 		},
 		"CTC Инт.": {
+			"g": "ru"
+		},
+		"Домашний": {
 			"g": "ru"
 		},
 		"СТС Россия": {
@@ -1518,8 +1559,8 @@
 		},
 		"Russian Travel Giude": {
 			"g": "ru",
-			"id":"Russian Travel Guide",
-			"n":"Russian Travel Guide"
+			"id": "Russian Travel Guide",
+			"n": "Russian Travel Guide"
 		},
 		"Ю": {
 			"g": "ru"
@@ -1697,8 +1738,8 @@
 		},
 		"Salon 2": {
 			"g": "tr",
-      "id": "Cinestar Vizyon 1",
-      "name": "Cinestar Vizyon 1"
+			"id": "Cinestar Vizyon 1",
+			"name": "Cinestar Vizyon 1"
 		},
 		"Salon 3": {
 			"g": "tr"
@@ -1895,6 +1936,10 @@
 			"id": "Penthouse HD1",
 			"g": "xx"
 		},
+		"Penthouse HD2": {
+			"id": "Penthouse HD1",
+			"g": "xx"
+		},
 		"Redlight": {
 			"g": "xx"
 		},
@@ -1940,7 +1985,7 @@
 		},
 		"XXX 4": {
 			"n": "SuperOne",
-			"id":"SuperOne",
+			"id": "SuperOne",
 			"g": "xx"
 		},
 		"SCT Teleitalia": {
@@ -1959,6 +2004,15 @@
 			"g": "xx"
 		},
 		"Ночной Клуб": {
+			"g": "xx"
+		},
+		"XYMAX": {
+			"g": "xx"
+		},
+		"XYMIX": {
+			"g": "xx"
+		},
+		"XYPlus": {
 			"g": "xx"
 		},
 		"Slovenija 2 TV": {
@@ -2187,5 +2241,5 @@
 		"ro": "Румънски"
 	},
 	"revision": "1",
-	"date": "20180214"
+	"date": "20180401"
 }
