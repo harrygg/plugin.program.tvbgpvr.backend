@@ -1,6 +1,4 @@
-# Addon Name: vStream
 # Addon id: plugin.program.bgplaylist
-# Addon Provider: vStream
 msgid ""
 msgstr ""
 
@@ -58,20 +56,4 @@ msgstr ""
 
 msgctxt "#32008"
 msgid "Stream not found for channel %s"
-msgstr ""
-
-msgctxt "#32100"
-msgid "All"
-msgstr ""
-
-msgctxt "#32101"
-msgid "HD"
-msgstr ""
-
-msgctxt "#32102"
-msgid "SD"
-msgstr ""
-
-msgctxt "#32103"
-msgid "LQ"
 msgstr ""

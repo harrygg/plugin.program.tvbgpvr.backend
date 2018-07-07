@@ -111,7 +111,7 @@ class Playlist:
   
   def __iter_lines__(self, response, chunk_size, delimiter=None):
     '''
-      Implementation of iter_lines to include progress bar
+      Implementation of iter_lines to include a progress bar
     '''
     pending = None
     
@@ -122,13 +122,11 @@ class Playlist:
         
       if delimiter:
         lines = chunk.split(delimiter)
-        
       else:
         lines = chunk.splitlines()
         
       if lines and lines[-1] and chunk and lines[-1][-1] == chunk[-1]:
         pending = lines.pop()
-        
       else:
         pending = None
         
@@ -417,8 +415,8 @@ class Playlist:
         the preferred_quality, the logic will select the highest available quality.
     '''
     _streams = []
+
     try:
-    
       log("set_preferred_quality() started")
       i = 0
       percent = 90
@@ -440,16 +438,15 @@ class Playlist:
           
         # disable streams with unpreferred quality
         for quality,stream in channel.streams.iteritems():
+        
           if quality == __preferred_quality:
             stream.disabled = False
-            log("Preferred %s stream found. Adding '%s'" % (stream.quality, stream.name))
-            
+            log("Preferred %s stream found. Adding '%s'" % (stream.quality, stream.name))            
           else:
             ## if it's a channel with a single stream, add it.
             if len(channel.streams) == 1 and not forced_disable:
               stream.disabled = False
-              log("Adding '%s' stream '%s' (single stream, quality setting is ignored)" % (stream.quality, stream.name))
-              
+              log("Adding '%s' stream '%s' (single stream, quality setting is ignored)" % (stream.quality, stream.name))      
             else:
               log("Disabling unpreferred '%s' stream %s" % (stream.quality, stream.name))
               stream.disabled = True
