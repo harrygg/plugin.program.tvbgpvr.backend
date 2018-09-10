@@ -343,7 +343,7 @@ class Playlist:
       #if os.environ.get('TVBGPVRDEBUG'):
       #  raise Exception('Debug mode enabled. Fail the download and force local playlist.')
         
-      url = "https://raw.githubusercontent.com/harrygg/plugin.program.tvbgpvr.backend/master/resources/mapping.json"
+      url = "https://raw.githubusercontent.com/harrygg/EPG/master/maps/channels-tvbg.json"
       headers = {"Accept-Encoding": "gzip, deflate"}
       log("Downloading streams map from: %s " % url)
       response = requests.get(url, headers=headers)
@@ -356,14 +356,11 @@ class Playlist:
       self.__map = response.json()
       
     except Exception as ex:
-      log("Downloading map failed!")
-      log(ex)
-      log("Loading local map %s " % self.mapping_file)
-      
-      with open(self.mapping_file) as data_file:
-        self.__map = json.load(data_file)
+      log("Downloading map failed!", 4)
+      log(ex, 4)
+      self.__map = {"date": "0", "revision": "0", "streams": {}, "groups": {}}
     
-    log("Loaded map. Date %s Rev. %s" % (self.__map["date"], self.__map["revision"]))
+    log("Loaded map. Date %s, Rev. %s, Channels %s, Groups %s" % (self.__map["date"], self.__map["revision"], len(self.__map["streams"]), len(self.__map["groups"])))
     
     
   def save(self, **kwargs):
@@ -385,11 +382,11 @@ class Playlist:
     
       with open(file_path, 'w') as file:
         log("Saving playlist type %s in %s " % (str(type), file_path))
-        file.write(self.__to_string(type))
-        
+        file.write(self.__to_string(type))        
       return True
     
     except Exception, er:
+    
       log(er, 4)
       return False
 
