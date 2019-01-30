@@ -77,7 +77,7 @@ def get_stream(name):
   ### stream invalidation on some middleware servers. If this is
   ### the first request return a dummy response and handle the 2nd
   log("Is TV Headned: %s" % is_tvheadend)
-  if not is_tvheadend and VERSION == 17 and not settings.first_request_sent:
+  if not is_tvheadend and VERSION > 16 and not settings.first_request_sent:
 
     settings.first_request_sent = True
     log("get_stream() ended. First request handled!")
