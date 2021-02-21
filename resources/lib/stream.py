@@ -1,12 +1,9 @@
-# -*- coding: utf8 -*-
 import re
 import sys
 import json
 import string
-from utils import *
+from .utils import *
 
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 class Stream:
   '''
@@ -65,12 +62,12 @@ class Stream:
   
   def __get_stream_properties(self):
     try: 
-      self.__props = self.streams_map[self.name.decode("utf-8")]
+      self.__props = self.streams_map[self.name]
       #log("Found map entry for channel %s" % self.name)
     except:
       if self.quality != SD:
         #log("Map entry for channel '%s' not found. Searching for '%s'" % (self.name, self.id))
-        self.__props = self.streams_map.get(self.id.decode("utf-8"), {})
+        self.__props = self.streams_map.get(self.id, {})
         #log("Found map entry for channel %s" % self.id)
   
   
@@ -132,14 +129,14 @@ class Stream:
     try: 
       logo = self.__props["l"]
     except:
-      name = re.sub(r'[\(\)&%/\!\:\.\s\'\*\,]*', '', self.name.decode("utf-8"))
+      name = re.sub(r'[\(\)&%/\!\:\.\s\'\*\,]*', '', self.name)
       # replace delayed channel identificators i.e. +1 or +12
       name = re.sub(r'\+\d+', '', name)
       logo = name.replace(LQ, "").replace("+", "plus").replace("-", "minus").lower()
       try:
         # translate cyrilic chars to latin
-        symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", 
-                 u"abvgdeejziiklmnoprstufhzcssiyyeuaABVGDEEJZIIKLMNOPRSTUFHZCSS_Y_EUA")
+        symbols = ("абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ", 
+                 "abvgdeejziiklmnoprstufhzcssiyyeuaABVGDEEJZIIKLMNOPRSTUFHZCSS_Y_EUA")
         tr = dict( [ (ord(a), ord(b)) for (a, b) in zip(*symbols) ] )
         logo = logo.translate(tr)     
       except:
@@ -192,7 +189,7 @@ class Stream:
       Outputs the stream object into a JSON formatted string
     '''
     #return json.dumps({"name": self.name, "id": self.id, "url": self.url, "logo": self.logo, "group": self.group, "is_radio": self.is_radio, "shift": self.shift, "order": self.order, "quality": self.quality}, ensure_ascii=False).encode('utf8')
-    return json.dumps({"name": self.name, "id": self.id}, ensure_ascii=False).encode('utf8')
+    return json.dumps({"name": self.name, "id": self.id}, ensure_ascii=False)
     
 
 class Channel:

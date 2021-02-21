@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 import os
+import io
 import re
 import requests
-from utils import *
-from urllib import unquote
-from bottle import route, default_app, request, HTTPResponse
+from .utils import *
+from urllib.parse import unquote
+from .bottle import route, default_app, request, HTTPResponse
 
 __DEBUG__ = os.environ.get('TVBGPVRDEBUG')
 app       = default_app()
@@ -20,8 +20,8 @@ def get_playlist():
   log("get_playlist() started")
   body = "#EXTM3U\n"
   try:
-    with open(pl_path) as file:
-      body = file.read() 
+    with io.open(pl_path, encoding='utf-8') as file:
+      body = file.read()
       
   except Exception as er:
     body = str(er)

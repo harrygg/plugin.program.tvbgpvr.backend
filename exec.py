@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 import os
 import xbmc
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import xbmcgui
 from resources.lib.utils import *
 from resources.lib.playlist import *
@@ -62,7 +61,7 @@ try:
     if settings.copy_playlist and os.path.isdir(settings.copy_to_folder):
       pl.save(path=os.path.join(settings.copy_to_folder, pl_name))
 
-except Exception, er:
+except Exception as er:
   log(er, xbmc.LOGERROR)
 
 ### Schedule next run

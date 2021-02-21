@@ -1,5 +1,5 @@
 from wsgiref.simple_server import ServerHandler, WSGIServer, WSGIRequestHandler, make_server
-from SocketServer import ThreadingMixIn
+from socketserver import ThreadingMixIn
 
 class SilentWSGIRequestHandler(WSGIRequestHandler):
   """Custom WSGI Request Handler with logging disabled"""
