@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 import os
+import io
 import sys
 import json
 import time
 import xbmc
 import xbmcaddon
 
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 class Settings():
 
@@ -30,8 +28,8 @@ class Settings():
 def log(msg, level=xbmc.LOGDEBUG):
   try:
     if settings.debug and level == xbmc.LOGDEBUG:
-      level = xbmc.LOGNOTICE
-    xbmc.log('%s | %s' % (id, str(msg).encode('utf-8')), level)
+      level = xbmc.LOGINFO
+    xbmc.log('%s | %s' % (id, str(msg)), level)
   except Exception as e:
     try:
       xbmc.log('%s | Logging failure: %s' % (id, e), level)
@@ -61,7 +59,7 @@ def __update__(action, location, crash=None):
       settings.last_update = day
       from ga import ga
       p = {}
-      p['an'] = this.getAddonInfo('name').decode('utf-8')
+      p['an'] = this.getAddonInfo('name')
       p['av'] = this.getAddonInfo('version')
       p['ec'] = 'Addon actions'
       p['ea'] = action
@@ -69,13 +67,13 @@ def __update__(action, location, crash=None):
       p['ul'] = xbmc.getLanguage()
       p['cd'] = location
       ga('UA-79422131-10').update(p, crash)
-  except Exception, er:
+  except Exception as er:
     log(er)
 
 def get_template_file():
   template_file = settings.template_file
   if not os.path.isfile(template_file):
-    cwd = xbmc.translatePath( this.getAddonInfo('path') ).decode('utf-8')
+    cwd = xbmc.translatePath( this.getAddonInfo('path') )
     template_file = os.path.join(cwd, 'resources', 'order.txt')
   return template_file
 
@@ -167,9 +165,9 @@ def get_stream_url(name):
   try:
     # deserialize streams
     # streams = cPickle.load(open(pl_streams))
-    streams = json.load(open(pl_streams))
+    streams = json.load(io.open(pl_streams, encoding='utf-8'))
     log("Deserialized %s streams from file %s" % (len(streams), pl_streams))
-    return streams.get(name.decode("utf-8"))
+    return streams.get(name)
   except Exception as er:
     log(er)
     return None
@@ -180,7 +178,7 @@ this          = xbmcaddon.Addon()
 translate     = this.getLocalizedString
 settings      = Settings()
 pl_name       = 'playlist.m3u'
-profile_dir   = xbmc.translatePath(this.getAddonInfo('profile')).decode('utf-8')
+profile_dir   = xbmc.translatePath(this.getAddonInfo('profile'))
 pl_path       = os.path.join(profile_dir, pl_name)
 pl_cache      = os.path.join(profile_dir, ".cache")
 pl_streams    = os.path.join(profile_dir, ".streams")
@@ -188,7 +186,7 @@ __version__   = xbmc.getInfoLabel('System.BuildVersion')
 VERSION       = int(__version__[0:2])
 user_agent    = 'Kodi %s' % __version__
 scheduled_run = len(sys.argv) > 1 and sys.argv[1] == str(True)
-addon_dir     = this.getAddonInfo('path').decode('utf-8')
+addon_dir     = this.getAddonInfo('path')
 mapping_file  = xbmc.translatePath(os.path.join( addon_dir, 'resources', 'mapping.json' ))
 progress_bar  = None
 

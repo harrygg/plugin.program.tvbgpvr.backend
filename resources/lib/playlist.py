@@ -1,16 +1,14 @@
-# -*- coding: utf8 -*-
 import os
+import io
 import re
 import sys
 import json
-import urllib
-#import cPickle
+import urllib.request, urllib.parse, urllib.error
+#import pickle
 import requests
-from stream import *
-from utils import *
+from .stream import *
+from .utils import *
 
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 class Playlist:
   streams = []
@@ -94,7 +92,7 @@ class Playlist:
         
       return True
       
-    except Exception, er:
+    except Exception as er:
       log(er, 4)
       return False
     
@@ -144,10 +142,10 @@ class Playlist:
     log("cache() started!")
     self.location = self.cache_file
     
-    with open(self.location, "w") as file:
+    with io.open(self.location, "w", encoding='utf-8') as file:
       for line in content:
         self.size += 1
-        file.write("%s\n" % line.rstrip().encode("utf-8"))
+        file.write("%s\n" % line.rstrip().decode())
         
     log("cache() ended!")
  
@@ -161,7 +159,7 @@ class Playlist:
     max = 80
     step = round(self.size/max) if self.size > 0 else 16
     
-    with open(self.location, "r") as file_content:
+    with io.open(self.location, "r", encoding='utf-8') as file_content:
       for i, line in enumerate(file_content):
         if self.size > 0: # if true, we have counted the lines
           if i % step == 0: 
@@ -175,18 +173,18 @@ class Playlist:
             stream = Stream(line, self.__map)
             
             ## create channels with various streams so that later we can extract streams with preffered quality
-            if stream.id not in self.channels.iterkeys():
+            if stream.id not in iter(list(self.channels.keys())):
               log("Creating channel '%s', adding %s stream '%s'" % (stream.id, stream.quality, stream.name))
               channel = Channel()
-              channel.name = stream.id.decode("utf-8")
+              channel.name = stream.id
               channel.streams[stream.quality] = stream
-              self.channels[channel.name.decode("utf-8")] = channel
+              self.channels[channel.name] = channel
               
             else:
               log("Appending stream '%s' to channel '%s'" % (stream.name, stream.id))
-              channel = self.channels[stream.id.decode("utf-8")]
+              channel = self.channels[stream.id]
               channel.streams[stream.quality] = stream
-              log("Channel '%s' has %s streams" % (stream.id, len(self.channels[stream.id.decode("utf-8")].streams)))  
+              log("Channel '%s' has %s streams" % (stream.id, len(self.channels[stream.id].streams)))  
               
           else:
             if not stream:
@@ -213,9 +211,9 @@ class Playlist:
       _streams[stream.name] = stream.url
       
     log("serializing %s streams in %s" % (len(_streams), self.streams_file))
-    #cPickle.dump(_streams, open(self.streams_file, "wb"))
+    #pickle.dump(_streams, open(self.streams_file, "wb"))
     
-    with open(self.streams_file, "w") as w:
+    with io.open(self.streams_file, "w", encoding='utf-8') as w:
       w.write(json.dumps(_streams, ensure_ascii=False))
       
     log("__serialize() ended")
@@ -251,7 +249,7 @@ class Playlist:
         log("'%s'=%s - ordered by original stream id" % (stream.name, stream.order))
         pass
     
-    self.streams = sorted(self.streams, key=lambda stream:stream.order)
+    self.streams = sorted(self.streams, key=lambda stream:int(stream.order))
     log("reorder() ended")
 
 
@@ -260,14 +258,14 @@ class Playlist:
     template_order = {}
     
     try:
-      with open(self.template_file) as file_content:
+      with io.open(self.template_file, encoding='utf-8') as file_content:
         log("Reading template file %s " % self.template_file)
         
         for i, line in enumerate(file_content):
           template_order[line.rstrip()] = i
           log("%s=%s" % (line.rstrip(), i))
           
-    except Exception, er:
+    except Exception as er:
       log(er, 4)
       
     return template_order
@@ -329,7 +327,7 @@ class Playlist:
       buffer = "[%s]" % buffer
     
     log("__to_string() returned %s streams" % enabled_streams)
-    return buffer.encode("utf-8", "replace")
+    return buffer
     
     
   def __load_map(self):
@@ -380,12 +378,12 @@ class Playlist:
       
     try:
     
-      with open(file_path, 'w') as file:
+      with io.open(file_path, 'w', encoding='utf-8') as file:
         log("Saving playlist type %s in %s " % (str(type), file_path))
         file.write(self.__to_string(type))        
       return True
     
-    except Exception, er:
+    except Exception as er:
     
       log(er, 4)
       return False
@@ -396,7 +394,7 @@ class Playlist:
     That point to our proxy server
     '''
     for stream in self.streams:
-      name = urllib.quote(stream.name.encode("utf-8"))
+      name = urllib.parse.quote(stream.name)
       stream.url = url % (name)
   
 
@@ -420,7 +418,7 @@ class Playlist:
       max = 5
       step = round(len(self.channels) / max)
       
-      for channel_name, channel in self.channels.iteritems():
+      for channel_name, channel in iter(list(self.channels.items())):
         if i % step == 0: 
           percent += 1
         self.__progress(percent, "Selecting %s streams for channel %s" % (preferred_quality, channel_name))
@@ -434,7 +432,7 @@ class Playlist:
           log("No %s stream for channel '%s'. Changing quality to %s" % (preferred_quality, channel_name, __preferred_quality))
           
         # disable streams with unpreferred quality
-        for quality,stream in channel.streams.iteritems():
+        for quality,stream in iter(list(channel.streams.items())):
         
           if quality == __preferred_quality:
             stream.disabled = False
