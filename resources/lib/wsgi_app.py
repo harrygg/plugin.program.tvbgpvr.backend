@@ -2,9 +2,9 @@
 import os
 import re
 import requests
-from utils import *
-from urllib import unquote
-from bottle import route, default_app, request, HTTPResponse
+from .utils import *
+from urllib.parse import unquote
+from .bottle import route, default_app, request, HTTPResponse
 
 __DEBUG__ = os.environ.get('TVBGPVRDEBUG')
 app       = default_app()
@@ -21,32 +21,32 @@ def get_playlist():
   body = "#EXTM3U\n"
   try:
     with open(pl_path) as file:
-      body = file.read() 
-      
+      body = file.read()
+
   except Exception as er:
     body = str(er)
     log(str(er))
 
   headers = {}
-  
+
   #explicitly check for None as it could be empty value
   if request.query.get("debug") != None:
     body = "<pre>" + body + "</pre>"
-    
+
   else:
     headers['Content-Type'] = "audio/mpegurl"
-    
+
   log("get_playlist() ended")
-  
-  return HTTPResponse(body, 
-                      status=200, 
+
+  return HTTPResponse(body,
+                      status=200,
                       **headers)
 
 
 @route('/stream/<name>', method=HEAD)
 @route('/tvbgpvr.backend/stream/<name>', method=HEAD)
 def get_stream(name):
-  return HTTPResponse(None, 
+  return HTTPResponse(None,
                       status=200)
 
 
@@ -57,7 +57,7 @@ def get_stream(name):
     Get the m3u stream url
     Returns 302 redirect
   '''
-  
+
   headers  = {}
   body     = None
   location = None
@@ -66,7 +66,7 @@ def get_stream(name):
     stream_name = unquote(name)
     location = get_stream_url(stream_name)
     return HTTPResponse(location, status = 200)
-    
+
   log("get_stream() started.")
   log("User-agent header: %s" % request.headers.get("User-Agent"))
   try:
@@ -81,21 +81,21 @@ def get_stream(name):
 
     settings.first_request_sent = True
     log("get_stream() ended. First request handled!")
-    return HTTPResponse(body, 
+    return HTTPResponse(body,
                       status = 200,
                       **headers)
-  
+
   ### If this is the 2nd request by the player
-  ### redirect it to the original stream  
+  ### redirect it to the original stream
   settings.first_request_sent = False
 
-  try:  
+  try:
     stream_name = unquote(name)
     location = get_stream_url(stream_name)
-    
+
     if not location:
       notify_error(translate(32008) % name)
-      return HTTPResponse(body, 
+      return HTTPResponse(body,
                           status = 404)
 
     if __DEBUG__:
@@ -103,14 +103,14 @@ def get_stream(name):
       log("get_stream() ended!")
       return HTTPResponse(location,
                           status = 200)
-                      
+
     headers['Location'] = location
 
   except Exception as er:
     body = str(er)
     log(str(er), 4)
-    
+
   log("get_stream() ended!")
-  return HTTPResponse(body, 
-                      status = 302, 
+  return HTTPResponse(body,
+                      status = 302,
                       **headers)
